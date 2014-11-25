@@ -86,10 +86,7 @@ namespace Webit\SoapApi\Tests\Hydrator {
             $hydrator = new HydratorSerializer($serializer);
             $result = new \stdClass();
 
-            $file = sys_get_temp_dir() . '/json-encode-test.txt';
-            file_put_contents($file, 'some-test-data');
-
-            $this->resource = fopen($file, 'r');
+            $this->resource = fopen(__DIR__.'/../Resources/example.txt', 'r');
             $result->mytestresource = $this->resource;
 
             $hydrator->hydrateResult($result, 'test-function', array());
