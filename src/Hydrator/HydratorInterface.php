@@ -16,9 +16,8 @@ interface HydratorInterface
 {
     /**
      * @param \stdClass $result
-     * @param string $soapFunction
-     * @param array $input
+     * @param string $resultType
      * @return mixed
      */
-    public function hydrateResult(\stdClass $result, $soapFunction, array $input);
+    public function hydrateResult(\stdClass $result, $resultType);
 }

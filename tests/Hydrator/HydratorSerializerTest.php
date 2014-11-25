@@ -11,7 +11,6 @@ namespace Webit\SoapApi\Tests\Hydrator {
     use Doctrine\Common\Collections\ArrayCollection;
     use JMS\Serializer\SerializerInterface;
     use Webit\SoapApi\Hydrator\HydratorSerializer;
-    use Webit\SoapApi\Hydrator\Result\ResultMapInterface;
 
     /**
      * Class HydratorSerializerTest
@@ -27,35 +26,13 @@ namespace Webit\SoapApi\Tests\Hydrator {
         /**
          * @test
          */
-        public function shouldReturnArrayCollectionByDefault()
+        public function shouldReturnResultWithGivenType()
         {
-            $serializer = $this->createSerializer();
-            $serializer->expects($this->once())->method('deserialize')
-                ->with($this->isType('string'), $this->equalTo('ArrayCollection'), $this->equalTo('json'))
-                ->willReturn(new ArrayCollection());
-
-            $hydrator = new HydratorSerializer($serializer);
-            $result = $hydrator->hydrateResult(new \stdClass(), 'test-function', array());
-
-            $this->assertInstanceOf('Doctrine\Common\Collections\ArrayCollection', $result);
-        }
-
-        /**
-         * @test
-         */
-        public function shouldFindResultTypeInResultTypeMapAndHydrateToIt()
-        {
-            $map = $this->createResultMap();
-            $map->expects($this->once())
-                ->method('getResultType')
-                ->with($this->equalTo('test-function'))
-                ->willReturn('array');
-
             $serializer = $this->createSerializer();
             $serializer->expects($this->once())->method('deserialize')->willReturn(array());
 
-            $hydrator = new HydratorSerializer($serializer, $map);
-            $result = $hydrator->hydrateResult(new \stdClass(), 'test-function', array());
+            $hydrator = new HydratorSerializer($serializer);
+            $result = $hydrator->hydrateResult(new \stdClass(), 'array');
 
             $this->assertInternalType('array', $result);
         }
@@ -72,7 +49,7 @@ namespace Webit\SoapApi\Tests\Hydrator {
             );
 
             $hydrator = new HydratorSerializer($serializer);
-            $hydrator->hydrateResult(new \stdClass(), 'test-function', array());
+            $hydrator->hydrateResult(new \stdClass(), 'array');
         }
 
         /**
@@ -84,12 +61,24 @@ namespace Webit\SoapApi\Tests\Hydrator {
             $serializer = $this->createSerializer();
 
             $hydrator = new HydratorSerializer($serializer);
-            $result = new \stdClass();
 
+            $result = new \stdClass();
             $this->resource = fopen(__DIR__.'/../Resources/example.txt', 'r');
             $result->mytestresource = $this->resource;
 
-            $hydrator->hydrateResult($result, 'test-function', array());
+            $hydrator->hydrateResult($result, 'array');
+        }
+
+        /**
+         * @test
+         * @expectedException \Webit\SoapApi\Hydrator\Exception\HydrationException
+         */
+        public function shouldThrowExceptionOnEmptyResultType()
+        {
+            $serializer = $this->createSerializer();
+
+            $hydrator = new HydratorSerializer($serializer);
+            $hydrator->hydrateResult(new \stdClass(), null);
         }
 
         /**
@@ -100,16 +89,6 @@ namespace Webit\SoapApi\Tests\Hydrator {
             $serializer = $this->getMock('JMS\Serializer\SerializerInterface');
 
             return $serializer;
-        }
-
-        /**
-         * @return \PHPUnit_Framework_MockObject_MockObject|ResultMapInterface
-         */
-        private function createResultMap()
-        {
-            $resultMap = $this->getMock('Webit\SoapApi\Hydrator\Result\ResultMapInterface');
-
-            return $resultMap;
         }
 
         public function tearDown()

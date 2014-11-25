@@ -6,9 +6,9 @@
  * Created on Nov 25, 2014, 17:17
  */
 
-namespace Webit\SoapApi\Tests\Hydrator\Result;
+namespace Webit\SoapApi\Tests\ResultType;
 
-use Webit\SoapApi\Hydrator\Result\ResultMap;
+use Webit\SoapApi\ResultType\ResultTypeMap;
 
 /**
  * Class ResultMapTest
@@ -21,7 +21,7 @@ class ResultMapTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldHaveDefaultFallbackType()
     {
-        $map = new ResultMap();
+        $map = new ResultTypeMap();
         $this->assertInternalType('string', $map->getResultType('some-function'));
     }
 
@@ -30,7 +30,7 @@ class ResultMapTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldBeAbleToRegisterType()
     {
-        $map = new ResultMap();
+        $map = new ResultTypeMap();
         $map->registerType('some-function', 'array');
 
         $this->assertEquals('array', $map->getResultType('some-function'));

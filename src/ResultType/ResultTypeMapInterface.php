@@ -1,18 +1,18 @@
 <?php
 /**
- * ResultMapInterface.php
+ * ResultTypeMapInterface.php
  *
  * @author dbojdo - Daniel Bojdo <daniel.bojdo@web-it.eu>
  * Created on Nov 25, 2014, 16:36
  */
 
-namespace Webit\SoapApi\Hydrator\Result;
+namespace Webit\SoapApi\ResultType;
 
 /**
- * Class ResultMapInterface
+ * Class ResultTypeMapInterface
  * @package Webit\SoapApi\Hydrator
  */
-interface ResultMapInterface
+interface ResultTypeMapInterface
 {
     /**
      * @param string $soapFunction

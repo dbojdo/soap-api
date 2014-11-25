@@ -1,20 +1,20 @@
 <?php
 /**
- * ResultMap.php
+ * ResultTypeMap.php
  *
  * @author dbojdo - Daniel Bojdo <daniel.bojdo@web-it.eu>
  * Created on Nov 25, 2014, 16:37
  */
 
-namespace Webit\SoapApi\Hydrator\Result;
+namespace Webit\SoapApi\ResultType;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * Class ResultMap
+ * Class ResultTypeMap
  * @package Webit\SoapApi\Hydrator
  */
-class ResultMap implements ResultMapInterface
+class ResultTypeMap implements ResultTypeMapInterface
 {
     /**
      * @var ArrayCollection
