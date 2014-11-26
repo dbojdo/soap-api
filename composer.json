@@ -2,6 +2,7 @@
     "name" : "webit/soap-api",
     "type" : "library",
     "description": "Web-IT SOAP API Tools",
+    "keywords": ["sopa", "api", "soap wrapper", "soap sdk"],
     "authors": [
         {
             "name": "Daniel Bojdo",
