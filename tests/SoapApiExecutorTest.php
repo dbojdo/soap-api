@@ -38,7 +38,10 @@ class SoapApiExecutorTest extends \PHPUnit_Framework_TestCase
         $normalizer = $this->createNormalizer();
         $normalizer->expects($this->any())->method('normalizeInput')->willReturn($input);
 
-        $executor = new SoapApiExecutor($soapClient, $normalizer);
+        $hydrator = $this->getHydrator();
+        $hydrator->expects($this->any())->method('hydrateResult')->willReturn($result);
+
+        $executor = new SoapApiExecutor($soapClient, $normalizer, $hydrator);
 
         $soapResult = $executor->executeSoapFunction($function, $input);
         $this->assertSame($result, $soapResult);
@@ -47,23 +50,33 @@ class SoapApiExecutorTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function shouldNormalizeInputWithNormalizer()
+    public function shouldNormalizeInputWithNormalizerIfInputNonEmpty()
     {
         $function = 'test-function';
         $input = array();
         $result = new \stdClass();
 
         $soapClient = $this->createSoapClient();
-        $soapClient->expects($this->once())
-                    ->method('__soapCall')
-                    ->willReturn($result);
+        $soapClient->expects($this->any())
+            ->method('__soapCall')
+            ->willReturn($result);
 
         $normalizer = $this->createNormalizer();
-        $normalizer->expects($this->once())->method('normalizeInput')
-                    ->with($this->equalTo($function), $this->equalTo($input))
-                    ->willReturn($input);
+        $normalizer->expects($this->never())->method('normalizeInput')
+            ->willReturn($input);
 
-        $executor = new SoapApiExecutor($soapClient, $normalizer);
+        $hydrator = $this->getHydrator();
+
+        $executor = new SoapApiExecutor($soapClient, $normalizer, $hydrator);
+        $executor->executeSoapFunction($function, $input);
+
+        $input = array('xxx' => 'zzz');
+        $normalizer = $this->createNormalizer();
+        $normalizer->expects($this->once())->method('normalizeInput')
+            ->with($this->equalTo($function), $this->equalTo($input))
+            ->willReturn($input);
+
+        $executor = new SoapApiExecutor($soapClient, $normalizer, $hydrator);
         $executor->executeSoapFunction($function, $input);
     }
 
@@ -106,7 +119,7 @@ class SoapApiExecutorTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function shouldDelegateHydrationToHydratorIfSetAndResultTypeIsGiven()
+    public function shouldDelegateHydrationToHydrator()
     {
         $function = 'test-function';
         $input = array();
@@ -126,39 +139,14 @@ class SoapApiExecutorTest extends \PHPUnit_Framework_TestCase
 
         $hydrationResult->yyy = 'zzz';
         $hydrator->expects($this->once())
-                    ->method('hydrateResult')
-                    ->with($this->equalTo($result), $this->equalTo('array'))
-                    ->willReturn($hydrationResult);
+            ->method('hydrateResult')
+            ->with($this->equalTo($result), $this->equalTo('array'))
+            ->willReturn($hydrationResult);
 
+        // output type set
         $executor = new SoapApiExecutor($soapClient, $normalizer, $hydrator);
         $result = $executor->executeSoapFunction($function, $input, 'array');
         $this->assertSame($hydrationResult, $result);
-    }
-
-    /**
-     * @test
-     * @expectedException \Webit\SoapApi\Exception\ExecutorException
-     * @throws \Exception
-     * @throws \Webit\SoapApi\HydrationException
-     * @throws \Webit\SoapApi\NormalizationException
-     */
-    public function shouldThrowExceptionIfResultTypeIsSetButThereIsNoHydrator()
-    {
-        $function = 'test-function';
-        $input = array();
-        $result = new \stdClass();
-
-        $soapClient = $this->createSoapClient();
-        $soapClient->expects($this->any())
-            ->method('__soapCall')
-            ->willReturn($result);
-
-        $normalizer = $this->createNormalizer();
-        $normalizer->expects($this->any())->method('normalizeInput')
-            ->willReturn($input);
-
-        $executor = new SoapApiExecutor($soapClient, $normalizer);
-        $executor->executeSoapFunction($function, $input, 'array');
     }
 
     /**
@@ -204,7 +192,7 @@ class SoapApiExecutorTest extends \PHPUnit_Framework_TestCase
     public function shouldThrowNormalizationException()
     {
         $function = 'test-function';
-        $input = array();
+        $input = array('xxx' => 'zzz');
         $result = new \stdClass();
 
         $soapClient = $this->createSoapClient();
@@ -216,7 +204,9 @@ class SoapApiExecutorTest extends \PHPUnit_Framework_TestCase
         $normalizer->expects($this->any())->method('normalizeInput')
             ->willThrowException($this->getMock('Webit\SoapApi\Input\Exception\NormalizationException'));
 
-        $executor = new SoapApiExecutor($soapClient, $normalizer);
+        $hydrator = $this->getHydrator();
+
+        $executor = new SoapApiExecutor($soapClient, $normalizer, $hydrator);
         $executor->executeSoapFunction($function, $input);
     }
 
@@ -239,17 +229,19 @@ class SoapApiExecutorTest extends \PHPUnit_Framework_TestCase
         $normalizer->expects($this->any())->method('normalizeInput')
             ->willReturn($input);
 
+        $hydrator = $this->getHydrator();
+
         $exceptionFactory = $this->createExceptionFactory();
         $exceptionFactory->expects($this->once())
-                        ->method('createException')
-                        ->with($this->equalTo($e),$this->equalTo($function), $this->equalTo($input))
-                        ->willReturn($this->getMock('\Exception'));
+            ->method('createException')
+            ->with($this->equalTo($e),$this->equalTo($function), $this->equalTo($input))
+            ->willReturn($this->getMock('\Exception'));
 
-        $executor = new SoapApiExecutor($soapClient, $normalizer, null, null, $exceptionFactory);
+        $executor = new SoapApiExecutor($soapClient, $normalizer, $hydrator, null, $exceptionFactory);
         try {
             $executor->executeSoapFunction($function, $input);
-        } catch (\Exception $catchedE) {
-            $this->assertNotSame($e, $catchedE);
+        } catch (\Exception $caughtE) {
+            $this->assertNotSame($e, $caughtE);
         }
     }
 

@@ -55,7 +55,7 @@ class SoapApiExecutor implements SoapApiExecutorInterface
     public function __construct(
         \SoapClient $soapClient,
         InputNormalizerInterface $inputNormalizer,
-        HydratorInterface $hydrator = null,
+        HydratorInterface $hydrator,
         ResultTypeMapInterface $resultTypeMap = null,
         ExceptionFactoryInterface $exceptionFactory = null
     ) {
@@ -78,22 +78,14 @@ class SoapApiExecutor implements SoapApiExecutorInterface
     public function executeSoapFunction($soapFunction, $input = null, $resultType = null)
     {
         try {
-            $input = $this->inputNormalizer->normalizeInput($soapFunction, $input);
-            $result = $this->soapClient->__soapCall($soapFunction, $input);
+            if ($input) {
+                $input = $this->inputNormalizer->normalizeInput($soapFunction, $input);
+            }
 
+            $result = $this->soapClient->__soapCall($soapFunction, $input);
             $resultType = ! $resultType && $this->resultTypeMap
                             ? $this->resultTypeMap->getResultType($soapFunction)
                             : $resultType;
-
-            if (! $resultType) {
-                return $result;
-            }
-
-            if ($resultType && ! $this->hydrator) {
-                throw new ExecutorException(
-                    sprintf('Result type "%s" has been required but Hydrator has not been set', $resultType)
-                );
-            }
 
             return $this->hydrator->hydrateResult($result, $resultType);
         } catch (HydrationException $e) {

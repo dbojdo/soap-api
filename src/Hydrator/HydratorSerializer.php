@@ -35,7 +35,7 @@ class HydratorSerializer implements HydratorInterface
     public function hydrateResult(\stdClass $result, $resultType)
     {
         if (! $resultType) {
-            throw new HydrationException('Empty result type has been passed.');
+            return $result;
         }
 
         $json = @json_encode($result);

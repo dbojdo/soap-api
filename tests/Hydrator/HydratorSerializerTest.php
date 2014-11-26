@@ -71,14 +71,17 @@ namespace Webit\SoapApi\Tests\Hydrator {
 
         /**
          * @test
-         * @expectedException \Webit\SoapApi\Hydrator\Exception\HydrationException
          */
-        public function shouldThrowExceptionOnEmptyResultType()
+        public function shouldReturnGivenResultIfResultTypeIsEmpty()
         {
             $serializer = $this->createSerializer();
 
+            $result = new \stdClass();
+
             $hydrator = new HydratorSerializer($serializer);
-            $hydrator->hydrateResult(new \stdClass(), null);
+            $hydrated = $hydrator->hydrateResult($result, null);
+
+            $this->assertSame($result, $hydrated);
         }
 
         /**
