@@ -19,8 +19,8 @@ interface ExceptionFactoryInterface
      *
      * @param \Exception $e
      * @param string $soapFunction
-     * @param array $input
+     * @param $input
      * @return \Exception
      */
-    public function createException(\Exception $e, $soapFunction, array $input);
+    public function createException(\Exception $e, $soapFunction, $input);
 }

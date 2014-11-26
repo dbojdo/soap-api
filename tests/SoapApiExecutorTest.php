@@ -6,6 +6,7 @@
 
 namespace Webit\SoapApi\Tests;
 
+use Webit\SoapApi\Exception\ExceptionFactoryInterface;
 use Webit\SoapApi\Exception\ExecutorException;
 use Webit\SoapApi\Hydrator\Exception\HydrationException;
 use Webit\SoapApi\Hydrator\HydratorInterface;
@@ -220,6 +221,39 @@ class SoapApiExecutorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @test
+     */
+    public function shouldDelegateExceptionWrappingToFactoryIfIsSet()
+    {
+        $function = 'test-function';
+        $input = array();
+
+        $e = $this->getMock('\Exception');
+
+        $soapClient = $this->createSoapClient();
+        $soapClient->expects($this->any())
+            ->method('__soapCall')
+            ->willThrowException($e);
+
+        $normalizer = $this->createNormalizer();
+        $normalizer->expects($this->any())->method('normalizeInput')
+            ->willReturn($input);
+
+        $exceptionFactory = $this->createExceptionFactory();
+        $exceptionFactory->expects($this->once())
+                        ->method('createException')
+                        ->with($this->equalTo($e),$this->equalTo($function), $this->equalTo($input))
+                        ->willReturn($this->getMock('\Exception'));
+
+        $executor = new SoapApiExecutor($soapClient, $normalizer, null, null, $exceptionFactory);
+        try {
+            $executor->executeSoapFunction($function, $input);
+        } catch (\Exception $catchedE) {
+            $this->assertNotSame($e, $catchedE);
+        }
+    }
+
+    /**
      * @return \PHPUnit_Framework_MockObject_MockObject|\SoapClient
      */
     private function createSoapClient()
@@ -257,5 +291,15 @@ class SoapApiExecutorTest extends \PHPUnit_Framework_TestCase
         $resultTypeMap = $this->getMock('Webit\SoapApi\Hydrator\HydratorInterface');
 
         return $resultTypeMap;
+    }
+
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject|ExceptionFactoryInterface
+     */
+    private function createExceptionFactory()
+    {
+        $exceptionFactory = $this->getMock('Webit\SoapApi\Exception\ExceptionFactoryInterface');
+
+        return $exceptionFactory;
     }
 }
