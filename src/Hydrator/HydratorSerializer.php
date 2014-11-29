@@ -10,6 +10,7 @@ namespace Webit\SoapApi\Hydrator;
 
 use JMS\Serializer\SerializerInterface;
 use Webit\SoapApi\Hydrator\Exception\HydrationException;
+use Webit\SoapApi\Util\BinaryStringHelper;
 
 /**
  * Class HydratorSerializer
@@ -22,9 +23,15 @@ class HydratorSerializer implements HydratorInterface
      */
     private $serializer;
 
-    public function __construct(SerializerInterface $serializer)
+    /**
+     * @var BinaryStringHelper
+     */
+    private $binaryStringHelper;
+
+    public function __construct(SerializerInterface $serializer, BinaryStringHelper $binaryStringHelper)
     {
         $this->serializer = $serializer;
+        $this->binaryStringHelper = $binaryStringHelper;
     }
 
     /**
@@ -34,13 +41,25 @@ class HydratorSerializer implements HydratorInterface
      */
     public function hydrateResult(\stdClass $result, $resultType)
     {
-        if (! $resultType) {
+        if (!$resultType) {
             return $result;
         }
 
         $json = @json_encode($result);
-        if (! $json) {
-            throw new HydrationException('Could not serialized result into JSON.');
+        $lastError = json_last_error();
+
+        if ($lastError) {
+            if ($lastError != JSON_ERROR_UTF8) {
+                throw $this->createEncodingException($lastError);
+            }
+
+            $this->binaryStringHelper->encodeBinaryString($result);
+
+            $json = @json_encode($result);
+            $lastError = json_last_error();
+            if ($lastError != JSON_ERROR_NONE) {
+                throw $this->createEncodingException($lastError);
+            }
         }
 
         try {
@@ -52,5 +71,44 @@ class HydratorSerializer implements HydratorInterface
                 $e
             );
         }
+    }
+
+    /**
+     * @param int $lastError
+     * @return HydrationException
+     */
+    private function createEncodingException($lastError)
+    {
+        $msg = 'Unknown error';
+        switch ($lastError) {
+            case JSON_ERROR_DEPTH:
+                $msg = 'The maximum stack depth has been exceeded';
+                break;
+            case JSON_ERROR_STATE_MISMATCH:
+                $msg = 'Invalid or malformed JSON';
+                break;
+            case JSON_ERROR_CTRL_CHAR:
+                $msg = 'Control character error, possibly incorrectly encoded';
+                break;
+            case JSON_ERROR_SYNTAX:
+                $msg = 'Syntax error';
+                break;
+            case JSON_ERROR_UTF8:
+                $msg = 'Malformed UTF-8 characters, possibly incorrectly encoded';
+                break;
+            default:
+                $msg = defined(JSON_ERROR_RECURSION) && $lastError == JSON_ERROR_RECURSION
+                    ? 'One or more recursive references in the value to be encoded' : '';
+
+                $msg = defined(JSON_ERROR_INF_OR_NAN) && $lastError == JSON_ERROR_INF_OR_NAN
+                    ? 'One or more NAN or INF values in the value to be encoded' : '';
+
+                $msg = defined(JSON_ERROR_UNSUPPORTED_TYPE) && $lastError == JSON_ERROR_UNSUPPORTED_TYPE ?
+                    'A value of a type that cannot be encoded was given' : '';
+        }
+
+        return new HydrationException(
+            sprintf('Could not serialized result into JSON. (Error: %s - %s)', $lastError, $msg)
+        );
     }
 }
