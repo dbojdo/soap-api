@@ -16,16 +16,28 @@ class BinaryStringHelper
      * Encode detected binary strings to base64
      * Check recursively public properties of \stdClass only
      *
-     * @param \stdClass $obj
+     * @param \stdClass|array $obj
      */
-    public function encodeBinaryString(\stdClass $obj)
+    public function encodeBinaryString(&$obj)
     {
-        foreach (get_object_vars($obj) as $var => $value) {
-            if ($obj->{$var} instanceof \stdClass) {
-                $this->encodeBinaryString($obj->{$var});
-            } else if ($this->isBinaryString($obj->{$var})) {
-                $obj->{$var} = base64_encode($obj->{$var});
+        if (is_array($obj)) {
+            foreach ($obj as &$val) {
+                $this->encodeBinaryString($val);
             }
+
+            return;
+        }
+
+        if ($obj instanceof \stdClass) {
+            foreach (get_object_vars($obj) as $var => $value) {
+                $this->encodeBinaryString($obj->{$var});
+            }
+
+            return;
+        }
+
+        if ($this->isBinaryString($obj)) {
+            $obj = base64_encode($obj);
         }
     }
 

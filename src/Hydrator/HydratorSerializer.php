@@ -36,11 +36,11 @@ class HydratorSerializer implements HydratorInterface
     }
 
     /**
-     * @param \stdClass $result
+     * @param \stdClass|array $result
      * @param string $resultType
      * @return mixed
      */
-    public function hydrateResult(\stdClass $result, $resultType)
+    public function hydrateResult($result, $resultType)
     {
         if (!$resultType) {
             return $result;
