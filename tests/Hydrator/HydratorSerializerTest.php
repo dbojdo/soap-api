@@ -110,11 +110,15 @@ class HydratorSerializerTest extends \PHPUnit_Framework_TestCase
     public function shouldFixArrayCollection()
     {
         $serializer = $this->createSerializer();
-        $serializer->expects($this->once())->method('deserialize')->willReturn(array());
+        $serializer->expects($this->any())->method('deserialize')->willReturn(array());
         $hydrator = new HydratorSerializer($serializer, $this->createHelper());
 
         $result = new \stdClass();
         $hydrated = $hydrator->hydrateResult($result, 'ArrayCollection');
+        $this->assertInstanceOf('Doctrine\Common\Collections\ArrayCollection', $hydrated);
+
+        $result = new \stdClass();
+        $hydrated = $hydrator->hydrateResult($result, 'ArrayCollection<string>');
         $this->assertInstanceOf('Doctrine\Common\Collections\ArrayCollection', $hydrated);
     }
 

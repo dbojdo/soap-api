@@ -70,7 +70,7 @@ class HydratorSerializer implements HydratorInterface
              * Workaround for JMS Serializer bug #9
              * @see https://github.com/schmittjoh/serializer/issues/9
              */
-            if (substr($resultType, 0, 16) == 'ArrayCollection' && is_array($hydrated)) {
+            if (substr($resultType, 0, 15) == 'ArrayCollection' && is_array($hydrated)) {
                 $hydrated = new ArrayCollection($hydrated);
             }
 
