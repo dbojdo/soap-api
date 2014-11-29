@@ -8,6 +8,7 @@
 
 namespace Webit\SoapApi\Hydrator;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\SerializerInterface;
 use Webit\SoapApi\Hydrator\Exception\HydrationException;
 use Webit\SoapApi\Util\BinaryStringHelper;
@@ -63,7 +64,17 @@ class HydratorSerializer implements HydratorInterface
         }
 
         try {
-            return $this->serializer->deserialize($json, $resultType, 'json');
+            $hydrated = $this->serializer->deserialize($json, $resultType, 'json');
+
+            /**
+             * Workaround for JMS Serializer bug #9
+             * @see https://github.com/schmittjoh/serializer/issues/9
+             */
+            if (substr($resultType, 0, 16) == 'ArrayCollection' && is_array($hydrated)) {
+                $hydrated = new ArrayCollection($hydrated);
+            }
+
+            return $hydrated;
         } catch (\Exception $e) {
             throw new HydrationException(
                 sprintf('Error during result hydration to type "%s"', $resultType),
