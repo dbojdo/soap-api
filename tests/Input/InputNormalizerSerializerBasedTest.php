@@ -8,7 +8,7 @@ namespace Webit\SoapApi\Tests\Input;
 
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
-use Webit\SoapApi\Input\InputNormalizerSerializedBased;
+use Webit\SoapApi\Input\InputNormalizerSerializerBased;
 
 /**
  * Class InputNormalizerSerializedBasedTest
@@ -43,7 +43,7 @@ class InputNormalizerSerializedBasedTest extends \PHPUnit_Framework_TestCase
                     ->with($this->equalTo('{}'), $this->equalTo('array'), $this->equalTo('json'))
                     ->willReturn(array());
 
-        $hydrator = new InputNormalizerSerializedBased($serializer);
+        $hydrator = new InputNormalizerSerializerBased($serializer);
         $hydrated = $hydrator->normalizeInput('test-function', $input);
 
         $this->assertEquals($expected, $hydrated);
@@ -76,7 +76,7 @@ class InputNormalizerSerializedBasedTest extends \PHPUnit_Framework_TestCase
 
         $serializer->expects($this->once())->method('deserialize')->willReturn(array());
 
-        $hydrator = new InputNormalizerSerializedBased($serializer, $groups);
+        $hydrator = new InputNormalizerSerializerBased($serializer, $groups);
         $hydrator->normalizeInput('test-function', $input);
     }
 
@@ -91,7 +91,7 @@ class InputNormalizerSerializedBasedTest extends \PHPUnit_Framework_TestCase
         $serializer = $this->createSerializer();
         $serializer->expects($this->once())->method('serialize')->willThrowException($this->getMock('\Exception'));
 
-        $hydrator = new InputNormalizerSerializedBased($serializer);
+        $hydrator = new InputNormalizerSerializerBased($serializer);
         $hydrator->normalizeInput('test-function', $input);
     }
 

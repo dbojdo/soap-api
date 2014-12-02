@@ -9,14 +9,14 @@
 namespace Webit\SoapApi\Tests\Hydrator;
 
 use JMS\Serializer\SerializerInterface;
-use Webit\SoapApi\Hydrator\HydratorSerializer;
+use Webit\SoapApi\Hydrator\HydratorSerializerBased;
 use Webit\SoapApi\Util\BinaryStringHelper;
 
 /**
  * Class HydratorSerializerTest
  * @package Webit\SoapApi\Tests\Hydrator
  */
-class HydratorSerializerTest extends \PHPUnit_Framework_TestCase
+class HydratorSerializerBasedTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var Resource
@@ -31,7 +31,7 @@ class HydratorSerializerTest extends \PHPUnit_Framework_TestCase
         $serializer = $this->createSerializer();
         $serializer->expects($this->once())->method('deserialize')->willReturn(array());
 
-        $hydrator = new HydratorSerializer($serializer, $this->createHelper());
+        $hydrator = new HydratorSerializerBased($serializer, $this->createHelper());
         $result = $hydrator->hydrateResult(new \stdClass(), 'array');
 
         $this->assertInternalType('array', $result);
@@ -48,7 +48,7 @@ class HydratorSerializerTest extends \PHPUnit_Framework_TestCase
             $this->getMock('\Exception')
         );
 
-        $hydrator = new HydratorSerializer($serializer, $this->createHelper());
+        $hydrator = new HydratorSerializerBased($serializer, $this->createHelper());
         $hydrator->hydrateResult(new \stdClass(), 'array');
     }
 
@@ -60,7 +60,7 @@ class HydratorSerializerTest extends \PHPUnit_Framework_TestCase
     {
         $serializer = $this->createSerializer();
 
-        $hydrator = new HydratorSerializer($serializer, $this->createHelper());
+        $hydrator = new HydratorSerializerBased($serializer, $this->createHelper());
 
         $result = new \stdClass();
         $this->resource = fopen(__DIR__ . '/../Resources/example.txt', 'r');
@@ -78,7 +78,7 @@ class HydratorSerializerTest extends \PHPUnit_Framework_TestCase
 
         $result = new \stdClass();
 
-        $hydrator = new HydratorSerializer($serializer, $this->createHelper());
+        $hydrator = new HydratorSerializerBased($serializer, $this->createHelper());
         $hydrated = $hydrator->hydrateResult($result, null);
 
         $this->assertSame($result, $hydrated);
@@ -100,7 +100,7 @@ class HydratorSerializerTest extends \PHPUnit_Framework_TestCase
             $h->encodeBinaryString($var);
         });
 
-        $hydrator = new HydratorSerializer($serializer, $helper);
+        $hydrator = new HydratorSerializerBased($serializer, $helper);
         $hydrator->hydrateResult($result, 'array');
     }
 
@@ -111,7 +111,7 @@ class HydratorSerializerTest extends \PHPUnit_Framework_TestCase
     {
         $serializer = $this->createSerializer();
         $serializer->expects($this->any())->method('deserialize')->willReturn(array());
-        $hydrator = new HydratorSerializer($serializer, $this->createHelper());
+        $hydrator = new HydratorSerializerBased($serializer, $this->createHelper());
 
         $result = new \stdClass();
         $hydrated = $hydrator->hydrateResult($result, 'ArrayCollection');

@@ -1,6 +1,6 @@
 <?php
 /**
- * File: InputNormalizerSerializedBased.php
+ * File: InputNormalizerSerializerBased.php
  * Created at: 2014-11-26 20:37
  */
  
@@ -12,10 +12,10 @@ use Webit\SoapApi\Hydrator\Exception\HydrationException;
 use Webit\SoapApi\Input\Exception\NormalizationException;
 
 /**
- * Class InputNormalizerSerializedBased
+ * Class InputNormalizerSerializerBased
  * @author Daniel Bojdo <daniel.bojdo@web-it.eu>
  */
-class InputNormalizerSerializedBased implements InputNormalizerInterface
+class InputNormalizerSerializerBased implements InputNormalizerInterface
 {
     /**
      * @var SerializerInterface

@@ -1,6 +1,6 @@
 <?php
 /**
- * HydratorSerializer.php
+ * HydratorSerializerBased.php
  *
  * @author dbojdo - Daniel Bojdo <daniel.bojdo@web-it.eu>
  * Created on Nov 25, 2014, 16:19
@@ -17,7 +17,7 @@ use Webit\SoapApi\Util\BinaryStringHelper;
  * Class HydratorSerializer
  * @package Webit\SoapApi\Hydrator
  */
-class HydratorSerializer implements HydratorInterface
+class HydratorSerializerBased implements HydratorInterface
 {
     /**
      * @var SerializerInterface
