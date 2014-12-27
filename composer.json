@@ -22,5 +22,6 @@
         "psr-4": {
             "Webit\\SoapApi\\": "src/"
         }
-    }
+    },
+    "minimum-stability": "dev"
 }
