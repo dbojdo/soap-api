@@ -27,11 +27,12 @@ class InputNormalizerSerializerBasedFactory
 
     /**
      * @param array $inputGroups
+     * @param bool $serializeNull
      * @return InputNormalizerSerializerBased
      */
-    public function createNormalizer(array $inputGroups = array())
+    public function createNormalizer(array $inputGroups = array(), $serializeNull = false)
     {
-        return new InputNormalizerSerializerBased($this->serializer, $inputGroups);
+        return new InputNormalizerSerializerBased($this->serializer, $inputGroups, $serializeNull);
     }
 }
  
