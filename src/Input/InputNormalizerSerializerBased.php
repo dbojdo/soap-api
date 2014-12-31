@@ -27,10 +27,16 @@ class InputNormalizerSerializerBased implements InputNormalizerInterface
      */
     private $groups;
 
-    public function __construct(SerializerInterface $serializer, $groups = array())
+    /**
+     * @var bool
+     */
+    private $serializeNull;
+
+    public function __construct(SerializerInterface $serializer, $groups = array(), $serializeNull = false)
     {
         $this->serializer = $serializer;
         $this->groups = (array) $groups;
+        $this->serializeNull = $serializeNull;
     }
 
     /**
@@ -58,6 +64,7 @@ class InputNormalizerSerializerBased implements InputNormalizerInterface
     private function createContext()
     {
         $context = SerializationContext::create();
+        $context->setSerializeNull($this->serializeNull);
 
         if ($this->groups) {
             $context->setGroups($this->groups);
