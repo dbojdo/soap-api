@@ -61,7 +61,7 @@ class Ip2GeoSimpleClient
 
     /**
      * @param Ip $ip
-     * @return mixed
+     * @return GeoLocation
      */
     public function getGeoLocation(Ip $ip)
     {
@@ -201,7 +201,7 @@ class Ip2GeoInputNormalisingClient
 
     /**
      * @param Ip $ip
-     * @return mixed
+     * @return GeoLocation
      */
     public function getGeoLocation(Ip $ip)
     {
