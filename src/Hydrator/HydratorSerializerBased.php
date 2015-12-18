@@ -2,79 +2,58 @@
 /**
  * HydratorSerializerBased.php
  *
- * @author dbojdo - Daniel Bojdo <daniel.bojdo@web-it.eu>
+ * @author dbojdo - Daniel Bojdo <daniel@bojdo.eu>
  * Created on Nov 25, 2014, 16:19
  */
 
 namespace Webit\SoapApi\Hydrator;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use JMS\Serializer\SerializerInterface;
+use JMS\Serializer\Serializer;
 use Webit\SoapApi\Hydrator\Exception\HydrationException;
-use Webit\SoapApi\Util\BinaryStringHelper;
+use Webit\SoapApi\Hydrator\Serializer\ResultTypeMap;
 
 /**
- * Class HydratorSerializer
+ * Class HydratorSerializerBased
  * @package Webit\SoapApi\Hydrator
  */
-class HydratorSerializerBased implements HydratorInterface
+class HydratorSerializerBased implements Hydrator
 {
     /**
-     * @var SerializerInterface
+     * @var Serializer
      */
     private $serializer;
 
     /**
-     * @var BinaryStringHelper
+     * @var ResultTypeMap
      */
-    private $binaryStringHelper;
+    private $resultTypeMap;
 
-    public function __construct(SerializerInterface $serializer, BinaryStringHelper $binaryStringHelper)
-    {
+    public function __construct(
+        Serializer $serializer,
+        ResultTypeMap $resultTypeMap
+    ) {
         $this->serializer = $serializer;
-        $this->binaryStringHelper = $binaryStringHelper;
+        $this->resultTypeMap = $resultTypeMap;
     }
 
     /**
      * @param \stdClass|array $result
-     * @param string $resultType
+     * @param string $soapFunction
      * @return mixed
      */
-    public function hydrateResult($result, $resultType)
+    public function hydrateResult($result, $soapFunction)
     {
-        if (!$resultType) {
-            return $result;
-        }
-
-        $json = @json_encode($result);
-        $lastError = json_last_error();
-
-        if ($lastError) {
-            if ($lastError != JSON_ERROR_UTF8) {
-                throw $this->createEncodingException($lastError);
-            }
-
-            $this->binaryStringHelper->encodeBinaryString($result);
-
-            $json = @json_encode($result);
-            $lastError = json_last_error();
-            if ($lastError != JSON_ERROR_NONE) {
-                throw $this->createEncodingException($lastError);
-            }
+        if (! is_array($result)) {
+            throw new HydrationException('HydratorSerializerBased expects result to be an array.');
         }
 
         try {
-            $hydrated = $this->serializer->deserialize($json, $resultType, 'json');
-
-            /**
-             * Workaround for JMS Serializer bug #9
-             * @see https://github.com/schmittjoh/serializer/issues/9
-             */
-            if (substr($resultType, 0, 15) == 'ArrayCollection' && is_array($hydrated)) {
-                $hydrated = new ArrayCollection($hydrated);
-            }
-
-            return $hydrated;
+            $resultType = $this->resultTypeMap->getResultType($soapFunction);
+            $hydrated = $this->serializer->fromArray(
+                $result,
+                $resultType
+            );
         } catch (\Exception $e) {
             throw new HydrationException(
                 sprintf('Error during result hydration to type "%s"', $resultType),
@@ -82,44 +61,15 @@ class HydratorSerializerBased implements HydratorInterface
                 $e
             );
         }
-    }
 
-    /**
-     * @param int $lastError
-     * @return HydrationException
-     */
-    private function createEncodingException($lastError)
-    {
-        $msg = 'Unknown error';
-        switch ($lastError) {
-            case JSON_ERROR_DEPTH:
-                $msg = 'The maximum stack depth has been exceeded';
-                break;
-            case JSON_ERROR_STATE_MISMATCH:
-                $msg = 'Invalid or malformed JSON';
-                break;
-            case JSON_ERROR_CTRL_CHAR:
-                $msg = 'Control character error, possibly incorrectly encoded';
-                break;
-            case JSON_ERROR_SYNTAX:
-                $msg = 'Syntax error';
-                break;
-            case JSON_ERROR_UTF8:
-                $msg = 'Malformed UTF-8 characters, possibly incorrectly encoded';
-                break;
-            default:
-                $msg = defined(JSON_ERROR_RECURSION) && $lastError == JSON_ERROR_RECURSION
-                    ? 'One or more recursive references in the value to be encoded' : '';
-
-                $msg = defined(JSON_ERROR_INF_OR_NAN) && $lastError == JSON_ERROR_INF_OR_NAN
-                    ? 'One or more NAN or INF values in the value to be encoded' : '';
-
-                $msg = defined(JSON_ERROR_UNSUPPORTED_TYPE) && $lastError == JSON_ERROR_UNSUPPORTED_TYPE ?
-                    'A value of a type that cannot be encoded was given' : '';
+        /**
+         * Workaround for JMS Serializer bug #9
+         * @see https://github.com/schmittjoh/serializer/issues/9
+         */
+        if (substr($resultType, 0, 15) == 'ArrayCollection' && is_array($hydrated)) {
+            $hydrated = new ArrayCollection($hydrated);
         }
 
-        return new HydrationException(
-            sprintf('Could not serialized result into JSON. (Error: %s - %s)', $lastError, $msg)
-        );
+        return $hydrated;
     }
 }

@@ -2,149 +2,115 @@
 /**
  * HydratorSerializerTest.php
  *
- * @author dbojdo - Daniel Bojdo <daniel.bojdo@web-it.eu>
+ * @author dbojdo - Daniel Bojdo <daniel@bojdo.eu>
  * Created on Nov 25, 2014, 16:43
  */
 
 namespace Webit\SoapApi\Tests\Hydrator;
 
-use JMS\Serializer\SerializerInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+use JMS\Serializer\Serializer;
 use Webit\SoapApi\Hydrator\HydratorSerializerBased;
-use Webit\SoapApi\Util\BinaryStringHelper;
+use Webit\SoapApi\Hydrator\Serializer\ResultTypeMap;
+use Webit\SoapApi\Tests\AbstractTest;
 
 /**
  * Class HydratorSerializerTest
  * @package Webit\SoapApi\Tests\Hydrator
  */
-class HydratorSerializerBasedTest extends \PHPUnit_Framework_TestCase
+class HydratorSerializerBasedTest extends AbstractTest
 {
     /**
-     * @var Resource
+     * @var Serializer|\Mockery\MockInterface
      */
-    private $resource;
+    private $serializer;
 
     /**
-     * @test
+     * @var ResultTypeMap|\Mockery\MockInterface
      */
-    public function shouldReturnResultWithGivenType()
+    private $resultTypeMap;
+
+    /**
+     * @var HydratorSerializerBased
+     */
+    private $hydrator;
+
+    protected function setUp()
     {
-        $serializer = $this->createSerializer();
-        $serializer->expects($this->once())->method('deserialize')->willReturn(array());
+        $this->serializer = $this->mockJmsSerializer();
+        $this->resultTypeMap = $this->mockResultTypeMap();
 
-        $hydrator = new HydratorSerializerBased($serializer, $this->createHelper());
-        $result = $hydrator->hydrateResult(new \stdClass(), 'array');
-
-        $this->assertInternalType('array', $result);
+        $this->hydrator = new HydratorSerializerBased(
+            $this->serializer,
+            $this->resultTypeMap
+        );
     }
 
     /**
      * @test
-     * @expectedException \Webit\SoapApi\Hydrator\Exception\HydrationException
      */
-    public function shouldWrapDeserializationException()
+    public function shouldHydrateWithSerializer()
     {
-        $serializer = $this->createSerializer();
-        $serializer->expects($this->once())->method('deserialize')->willThrowException(
-            $this->getMock('\Exception')
+        $resolvedType = 'type';
+
+        $func = 'func';
+        $result = array('result');
+        $hydrated = 'hydrated';
+
+        $this->resultTypeMap->shouldReceive('getResultType')->with($func)->andReturn($resolvedType)->once();
+        $this->serializer->shouldReceive('fromArray')->with($result, $resolvedType)->once()->andReturn($hydrated);
+
+        $this->assertEquals(
+            $hydrated,
+            $this->hydrator->hydrateResult($result, $func)
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function shouldApplyArrayCollectionFix()
+    {
+        $resolvedType = 'ArrayCollection<type>';
+
+        $func = 'func';
+        $result = array('result');
+        $hydrated = array(
+            'result' => 'x'
         );
 
-        $hydrator = new HydratorSerializerBased($serializer, $this->createHelper());
-        $hydrator->hydrateResult(new \stdClass(), 'array');
+        $this->resultTypeMap->shouldReceive('getResultType')->andReturn($resolvedType);
+        $this->serializer->shouldReceive('fromArray')->andReturn($hydrated);
+
+        $this->assertEquals(
+            new ArrayCollection($hydrated),
+            $this->hydrator->hydrateResult($result, $func)
+        );
     }
 
     /**
      * @test
      * @expectedException \Webit\SoapApi\Hydrator\Exception\HydrationException
      */
-    public function shouldThrowExceptionOnJsonEncodingProblem()
+    public function shouldWrapException()
     {
-        $serializer = $this->createSerializer();
+        $resolvedType = 'ArrayCollection<type>';
 
-        $hydrator = new HydratorSerializerBased($serializer, $this->createHelper());
+        $func = 'func';
+        $result = array('result');
 
-        $result = new \stdClass();
-        $this->resource = fopen(__DIR__ . '/../Resources/example.txt', 'r');
-        $result->mytestresource = $this->resource;
+        $this->resultTypeMap->shouldReceive('getResultType')->andReturn($resolvedType);
+        $this->serializer->shouldReceive('fromArray')->andThrow('\Exception');
 
-        $hydrator->hydrateResult($result, 'array');
+        $this->hydrator->hydrateResult($result, $func);
     }
 
     /**
      * @test
+     * @expectedException \Webit\SoapApi\Hydrator\Exception\HydrationException
      */
-    public function shouldReturnGivenResultIfResultTypeIsEmpty()
+    public function shouldAcceptOnlyArrayResult()
     {
-        $serializer = $this->createSerializer();
-
-        $result = new \stdClass();
-
-        $hydrator = new HydratorSerializerBased($serializer, $this->createHelper());
-        $hydrated = $hydrator->hydrateResult($result, null);
-
-        $this->assertSame($result, $hydrated);
-    }
-
-    /**
-     * @test
-     */
-    public function shouldSupportBinaryData()
-    {
-        $serializer = $this->createSerializer();
-
-        $result = new \stdClass();
-        $result->x = file_get_contents(__DIR__ . '/../Resources/image.png');
-
-        $helper = $this->createHelper();
-        $helper->expects($this->atLeastOnce())->method('encodeBinaryString')->willReturnCallback(function(\stdClass $var) {
-            $h = new BinaryStringHelper();
-            $h->encodeBinaryString($var);
-        });
-
-        $hydrator = new HydratorSerializerBased($serializer, $helper);
-        $hydrator->hydrateResult($result, 'array');
-    }
-
-    /**
-     * @test
-     */
-    public function shouldFixArrayCollection()
-    {
-        $serializer = $this->createSerializer();
-        $serializer->expects($this->any())->method('deserialize')->willReturn(array());
-        $hydrator = new HydratorSerializerBased($serializer, $this->createHelper());
-
-        $result = new \stdClass();
-        $hydrated = $hydrator->hydrateResult($result, 'ArrayCollection');
-        $this->assertInstanceOf('Doctrine\Common\Collections\ArrayCollection', $hydrated);
-
-        $result = new \stdClass();
-        $hydrated = $hydrator->hydrateResult($result, 'ArrayCollection<string>');
-        $this->assertInstanceOf('Doctrine\Common\Collections\ArrayCollection', $hydrated);
-    }
-
-    /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|SerializerInterface
-     */
-    private function createSerializer()
-    {
-        $serializer = $this->getMock('JMS\Serializer\SerializerInterface');
-
-        return $serializer;
-    }
-
-    public function tearDown()
-    {
-        if (is_resource($this->resource)) {
-            fclose($this->resource);
-        }
-    }
-
-    /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|BinaryStringHelper
-     */
-    private function createHelper()
-    {
-        return $this->getMock('Webit\SoapApi\Util\BinaryStringHelper');
+        $this->hydrator->hydrateResult('string', 'func');
     }
 }
-

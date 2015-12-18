@@ -1,26 +1,22 @@
 <?php
 /**
- * SoapClientFactory.php
+ * SoapClientFactoryInterface.php
  *
- * @author dbojdo - Daniel Bojdo <daniel.bojdo@web-it.eu>
- * Created on Nov 25, 2014, 16:00
+ * @author dbojdo - Daniel Bojdo <daniel@bojdo.eu>
+ * Created on Nov 25, 2014, 15:59
  */
 
 namespace Webit\SoapApi\SoapClient;
 
 /**
- * Class SoapClientFactory
+ * Interface SoapClientFactoryInterface
  * @package Webit\SoapApi\SoapClient
  */
-class SoapClientFactory implements SoapClientFactoryInterface
+interface SoapClientFactory
 {
     /**
-     * @param string $wsdl
-     * @param array $options
      * @return \SoapClient
      */
-    public function createSoapClient($wsdl, array $options = array())
-    {
-        return new \SoapClient($wsdl, $options);
-    }
+    public function createSoapClient();
 }
+ 

@@ -2,11 +2,13 @@
 /**
  * AbstractApi.php
  *
- * @author dbojdo - Daniel Bojdo <daniel.bojdo@web-it.eu>
+ * @author dbojdo - Daniel Bojdo <daniel@bojdo.eu>
  * Created on Nov 25, 2014, 15:55
  */
 
 namespace Webit\SoapApi;
+
+use Webit\SoapApi\Executor\SoapApiExecutor;
 
 /**
  * Class AbstractApi
@@ -15,14 +17,14 @@ namespace Webit\SoapApi;
 abstract class AbstractApi
 {
     /**
-     * @var SoapApiExecutorInterface
+     * @var SoapApiExecutor
      */
     private $executor;
 
     /**
-     * @param SoapApiExecutorInterface $soapApiExecutor
+     * @param SoapApiExecutor $soapApiExecutor
      */
-    public function __construct(SoapApiExecutorInterface $soapApiExecutor)
+    public function __construct(SoapApiExecutor $soapApiExecutor)
     {
         $this->executor = $soapApiExecutor;
     }
@@ -30,11 +32,10 @@ abstract class AbstractApi
     /**
      * @param string $soapFunction
      * @param mixed $input
-     * @param null $resultType
      * @return mixed
      */
-    protected function doRequest($soapFunction, $input = array(), $resultType = null)
+    protected function doRequest($soapFunction, $input = null)
     {
-        return $this->executor->executeSoapFunction($soapFunction, $input, $resultType);
+        return $this->executor->executeSoapFunction($soapFunction, $input);
     }
 }

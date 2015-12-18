@@ -3,17 +3,14 @@
  * HydrationException.php
  *
  * @author dbojdo - Daniel Bojdo <daniel@bojdo.eu>
- * Created on Nov 25, 2014, 16:08
+ * Created on 12 16, 2015, 11:08
  */
 
-namespace Webit\SoapApi\Hydrator\Exception;
+namespace Webit\SoapApi\Executor\Exception;
 
 use Webit\SoapApi\Exception\GenericSoapApiException;
 
-/**
- * Class HydrationException
- * @package Webit\SoapApi\Hydrator\Exception
- */
 class HydrationException extends GenericSoapApiException
 {
+
 }
