@@ -153,6 +153,7 @@ Let's abstract transformation of our ***Ip*** to SOAP function arguments.
 
 ```php
 
+<?php
 namespace Webit\SoapApi\Features\Ip2Geo\Normaliser;
 
 use Webit\SoapApi\Features\Ip2Geo\Ip;
@@ -187,6 +188,7 @@ Then ***Ip2GeoInputNormalisingClient*** will look like:
 
 ```php
 
+<?php
 namespace Webit\SoapApi\Features\Ip2Geo;
 
 use Webit\SoapApi\Executor\SoapApiExecutor;
@@ -224,6 +226,7 @@ Now we configure ***SoapApiExecutor*** to use ***ResolveIPNornaliser*** for give
 
 ```php
 
+<?php
 use Webit\SoapApi\Executor\SoapApiExecutorBuilder;
 use Webit\SoapApi\SoapClient\SoapClientSimpleFactory;
 
@@ -331,6 +334,7 @@ Now we configure ***SoapApiExecutor*** to use both ***ResolveIPHydrator*** and *
 
 ```php
 
+<?php
 use Webit\SoapApi\Executor\SoapApiExecutorBuilder;
 use Webit\SoapApi\SoapClient\SoapClientSimpleFactory;
 
