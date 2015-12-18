@@ -2,9 +2,8 @@
 /**
  * Ip2GeoClient.php
  *
- * @author dbojdo - Daniel Bojdo <daniel.bojdo@8x8.com>
+ * @author dbojdo - Daniel Bojdo <daniel@bojdo.eu>
  * Created on 12 17, 2015, 16:19
- * Copyright (C) 8x8
  */
 
 namespace Webit\SoapApi\Features\Ip2Geo;

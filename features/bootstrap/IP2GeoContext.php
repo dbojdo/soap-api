@@ -11,9 +11,8 @@ use Webit\SoapApi\SoapClient\SoapClientSimpleFactory;
 /**
  * IP2GeoContext.php
  *
- * @author dbojdo - Daniel Bojdo <daniel.bojdo@8x8.com>
+ * @author dbojdo - Daniel Bojdo <daniel@bojdo.eu>
  * Created on 12 17, 2015, 16:12
- * Copyright (C) 8x8
  */
 class IP2GeoContext implements Context, SnippetAcceptingContext
 {
