@@ -23,5 +23,12 @@
             "Webit\\SoapApi\\": "src/"
         }
     },
-    "minimum-stability": "dev"
+    "prefer-stable": true,
+    "minimum-stability": "dev",
+    "extra": {
+        "branch-alias": {
+            "dev-1.x": "1.x-dev",
+            "dev-master": "2.x-dev"
+        }
+    }
 }
