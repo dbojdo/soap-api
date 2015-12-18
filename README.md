@@ -3,7 +3,7 @@ This library provides set of tools to ease building clients / SDK's for web serv
 
 ## Installation
 
-Composer: add the **webit/bcmath** into **composer.json**
+Composer: add the **webit/soap-api** into **composer.json**
 
 ```json
 {
@@ -20,11 +20,15 @@ Composer: add the **webit/bcmath** into **composer.json**
 ./vendor/bin/phpunit
 ```
 
-## Example
+## Examples
+
+Run Behat tests
 
 ```bash
 ./vendor/bin/behat
 ```
+
+Then explore their implementation under ***features/***
 
 ## Usage
 
@@ -360,7 +364,3 @@ $client = new \Webit\SoapApi\Features\Ip2Geo\Ip2GeoResultHydratingClient(
 $result = $client->getGeoLocation(new Ip('8.8.8.8')); // returns GeoLocation instance
 
 ```
-
-### Summary
-
-Full example can be seen under ***features/*** directory as Behat test
