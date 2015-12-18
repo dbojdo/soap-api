@@ -18,7 +18,7 @@ class SoapClientBuilder
     /**
      * @var array
      */
-    private $options;
+    private $options = array();
 
     /**
      * @return SoapClientBuilder
@@ -30,23 +30,36 @@ class SoapClientBuilder
 
     /**
      * @param string $wsdl
+     * @return SoapClientBuilder
      */
     public function setWsdl($wsdl)
     {
         $this->wsdl = $wsdl;
+
+        return $this;
     }
 
     /**
      * @param array $options
+     * @return SoapClientBuilder
      */
     public function setOptions(array $options)
     {
         $this->options = $options;
+
+        return $this;
     }
 
+    /**
+     * @param string $option
+     * @param mixed $value
+     * @return SoapClientBuilder
+     */
     public function setOption($option, $value)
     {
         $this->options[$option] = $value;
+
+        return $this;
     }
 
     /**

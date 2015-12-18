@@ -11,14 +11,20 @@ namespace Webit\SoapApi\Executor;
 use Webit\SoapApi\Executor\Exception\MissingSoapClientFactoryException;
 use Webit\SoapApi\Hydrator\Hydrator;
 use Webit\SoapApi\Input\InputNormaliser;
+use Webit\SoapApi\SoapClient\SoapClientBuilder;
 use Webit\SoapApi\SoapClient\SoapClientFactory;
 
 class SoapApiExecutorBuilder
 {
     /**
-     * @var SoapClientFactory
+     * @var SoapClientBuilder
      */
-    private $soapClientFactory;
+    private $soapClientBuilder;
+
+    /**
+     * @var \SoapClient
+     */
+    private $soapClient;
 
     /**
      * @var InputNormaliser
@@ -30,6 +36,11 @@ class SoapApiExecutorBuilder
      */
     private $hydrator;
 
+    public function __construct()
+    {
+        $this->soapClientBuilder = SoapClientBuilder::create();
+    }
+
     /**
      * @return SoapApiExecutorBuilder
      */
@@ -39,11 +50,11 @@ class SoapApiExecutorBuilder
     }
 
     /**
-     * @param SoapClientFactory $soapClientFactory
+     * @param \SoapClient $soapClient
      */
-    public function setSoapClientFactory($soapClientFactory)
+    public function setSoapClient(\SoapClient $soapClient)
     {
-        $this->soapClientFactory = $soapClientFactory;
+        $this->soapClient = $soapClient;
     }
 
     /**
@@ -67,11 +78,9 @@ class SoapApiExecutorBuilder
      */
     public function build()
     {
-        if (! $this->soapClientFactory) {
-            throw new MissingSoapClientFactoryException('SoapClientFactory must be set.');
-        }
+        $client = $this->soapClient ?: $this->soapClientBuilder->build();
 
-        $executor = new RawExecutor($this->soapClientFactory);
+        $executor = new RawExecutor($client);
         if ($this->inputNormaliser) {
             $executor = new InputNormalisingExecutor($this->inputNormaliser, $executor);
         }
@@ -81,5 +90,21 @@ class SoapApiExecutorBuilder
         }
 
         return $executor;
+    }
+
+    /**
+     * @param string $wsdl
+     */
+    public function setWsdl($wsdl)
+    {
+        $this->soapClientBuilder->setWsdl($wsdl);
+    }
+
+    /**
+     * @param array $options
+     */
+    public function setSoapClientOptions(array $options)
+    {
+        $this->soapClientBuilder->setOptions($options);
     }
 }

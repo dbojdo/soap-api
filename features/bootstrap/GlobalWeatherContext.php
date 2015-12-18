@@ -16,7 +16,6 @@ use Webit\SoapApi\Features\GlobalWeather\Normaliser\GetCitiesByCountryNormaliser
 use Webit\SoapApi\Features\GlobalWeather\Normaliser\GetWeatherNormaliser;
 use Webit\SoapApi\Hydrator\FrontHydrator;
 use Webit\SoapApi\Input\FrontInputNormaliser;
-use Webit\SoapApi\SoapClient\SoapClientSimpleFactory;
 
 /**
  * Defines application features from the specific context.
@@ -63,8 +62,8 @@ class GlobalWeatherContext implements Context, SnippetAcceptingContext
         $builder = SoapApiExecutorBuilder::create();
 
         // 1. Set SoapClient Factory
-        $builder->setSoapClientFactory(
-            $this->mockSoapClient ? $this->createMockedFactory() : $this->createRealFactory()
+        $builder->setSoapClient(
+            $this->mockSoapClient ? $this->createMockedClient() : $this->createRealClient()
         );
 
         // 2. Configure input normaliser
@@ -124,22 +123,22 @@ class GlobalWeatherContext implements Context, SnippetAcceptingContext
     }
 
     /**
-     * @return SoapClientSimpleFactory
+     * @return \SoapClient
      */
-    private function createRealFactory()
+    private function createRealClient()
     {
-        return new SoapClientSimpleFactory(
-            "http://www.webservicex.net/globalweather.asmx?WSDL",
-            array(
+        return \Webit\SoapApi\SoapClient\SoapClientBuilder::create()
+            ->setWsdl("http://www.webservicex.net/globalweather.asmx?WSDL")
+            ->setOptions(array(
                 "exceptions" => true
-            )
-        );
+            ))
+        ->build();
     }
 
     /**
-     * @return \Mockery\MockInterface|\Webit\SoapApi\SoapClient\SoapClientFactory
+     * @return \Mockery\MockInterface|\SoapClient
      */
-    private function createMockedFactory()
+    private function createMockedClient()
     {
         $client = \Mockery::mock('\SoapClient');
 
@@ -151,10 +150,7 @@ class GlobalWeatherContext implements Context, SnippetAcceptingContext
             $this->createWeatherResult()
         );
 
-        $factory = \Mockery::mock('Webit\SoapApi\SoapClient\SoapClientFactory');
-        $factory->shouldReceive('createSoapClient')->andReturn($client);
-
-        return $factory;
+        return $client;
     }
 
     private function createCitiesResult()

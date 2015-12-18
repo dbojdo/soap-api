@@ -16,11 +16,6 @@ use Webit\SoapApi\Tests\AbstractTest;
 class RawExecutorTest extends AbstractTest
 {
     /**
-     * @var \Mockery\MockInterface|\Webit\SoapApi\SoapClient\SoapClientFactory
-     */
-    private $factory;
-
-    /**
      * @var \Mockery\MockInterface|\SoapClient
      */
     private $soapClient;
@@ -34,25 +29,7 @@ class RawExecutorTest extends AbstractTest
     {
         $this->soapClient = $this->mockSoapClient();
 
-        $this->factory = $this->mockSoapClientFactory();
-        $this->factory->shouldReceive('createSoapClient')->andReturn($this->soapClient);
-
-        $this->executor = new RawExecutor($this->factory);
-    }
-
-    /**
-     * @test
-     */
-    public function shouldLazyInstantiateSoapClientOnlyOnce()
-    {
-        $this->factory->shouldNotHaveReceived('createSoapClient');
-
-        $this->soapClient->shouldReceive('__soapCall');
-
-        $this->executor->executeSoapFunction('function');
-        $this->executor->executeSoapFunction('function');
-
-        $this->factory->shouldHaveReceived('createSoapClient')->once();
+        $this->executor = new RawExecutor($this->soapClient);
     }
 
     /**

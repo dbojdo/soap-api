@@ -22,22 +22,16 @@ class RawExecutor implements SoapApiExecutor
     private static $cacheKey = 'client';
 
     /**
-     * @var SoapClientFactory
+     * @var \SoapClient
      */
-    private $soapClientFactory;
+    private $soapClient;
 
     /**
-     * @var ArrayCache
+     * @param \SoapClient $soapClient
      */
-    private $cache;
-
-    /**
-     * @param SoapClientFactory $soapClientFactory
-     */
-    public function __construct(SoapClientFactory $soapClientFactory)
+    public function __construct(\SoapClient $soapClient)
     {
-        $this->soapClientFactory = $soapClientFactory;
-        $this->cache = new ArrayCache();
+        $this->soapClient = $soapClient;
     }
 
     /**
@@ -48,26 +42,9 @@ class RawExecutor implements SoapApiExecutor
     public function executeSoapFunction($soapFunction, $input = null)
     {
         try {
-            $soapClient = $this->getSoapClient();
-
-            return $soapClient->__soapCall($soapFunction, array($input));
+            return $this->soapClient->__soapCall($soapFunction, array($input));
         } catch (\Exception $e) {
             throw new ExecutorException($e->getMessage(), $e->getCode(), $e);
         }
-    }
-
-    /**
-     * @return \SoapClient
-     */
-    private function getSoapClient()
-    {
-        if (! $this->cache->contains(self::$cacheKey)) {
-            $soapClient = $this->soapClientFactory->createSoapClient();
-            $this->cache->save(self::$cacheKey, $soapClient);
-
-            return $soapClient;
-        }
-
-        return $this->cache->fetch(self::$cacheKey);
     }
 }

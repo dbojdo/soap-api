@@ -20,9 +20,10 @@ class ExecutorBuilderTest extends AbstractTest
 
     protected function setUp()
     {
+        $wsdl = __DIR__.'/../Resources/test-wsdl.xml';
         $this->builder = SoapApiExecutorBuilder::create();
-        $this->builder->setSoapClientFactory(
-            $this->mockSoapClientFactory()
+        $this->builder->setWsdl(
+            $wsdl
         );
     }
 
@@ -65,11 +66,9 @@ class ExecutorBuilderTest extends AbstractTest
 
     /**
      * @test
-     * @expectedException \Webit\SoapApi\Executor\Exception\MissingSoapClientFactoryException
      */
-    public function shouldRequireSoapClientFactory()
+    public function shouldAllowSetSoapClient()
     {
-        $builder = SoapApiExecutorBuilder::create();
-        $builder->build();
+        $this->builder->setSoapClient($this->mockSoapClient());
     }
 }

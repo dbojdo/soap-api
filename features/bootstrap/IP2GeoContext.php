@@ -6,7 +6,6 @@ use Webit\SoapApi\Executor\SoapApiExecutorBuilder;
 use Webit\SoapApi\Features\Ip2Geo\Hydrator\ResolveIPHydrator;
 use Webit\SoapApi\Features\Ip2Geo\Ip;
 use Webit\SoapApi\Features\Ip2Geo\Normaliser\ResolveIPNormaliser;
-use Webit\SoapApi\SoapClient\SoapClientSimpleFactory;
 
 /**
  * IP2GeoContext.php
@@ -68,8 +67,8 @@ class IP2GeoContext implements Context, SnippetAcceptingContext
     private function createSimpleClient()
     {
         $builder = SoapApiExecutorBuilder::create();
-        $builder->setSoapClientFactory(
-            $this->createSoapClientFactory()
+        $builder->setSoapClient(
+            $this->createSoapClient()
         );
 
         return new \Webit\SoapApi\Features\Ip2Geo\Ip2GeoSimpleClient(
@@ -80,8 +79,8 @@ class IP2GeoContext implements Context, SnippetAcceptingContext
     private function createInputNormalisingClient()
     {
         $builder = SoapApiExecutorBuilder::create();
-        $builder->setSoapClientFactory(
-            $this->createSoapClientFactory()
+        $builder->setSoapClient(
+            $this->createSoapClient()
         );
 
         $builder->setInputNormaliser(
@@ -100,8 +99,8 @@ class IP2GeoContext implements Context, SnippetAcceptingContext
     private function createResultHydratingClient()
     {
         $builder = SoapApiExecutorBuilder::create();
-        $builder->setSoapClientFactory(
-            $this->createSoapClientFactory()
+        $builder->setSoapClient(
+            $this->createSoapClient()
         );
 
         $builder->setInputNormaliser(
@@ -125,10 +124,38 @@ class IP2GeoContext implements Context, SnippetAcceptingContext
         );
     }
 
-    private function createSoapClientFactory()
+    private function createSoapClient()
     {
-        return new SoapClientSimpleFactory(
-            'http://ws.cdyne.com/ip2geo/ip2geo.asmx?WSDL'
-        );
+        return $this->mockSoapClient
+            ? $this->createMockedClient()
+            : \Webit\SoapApi\SoapClient\SoapClientBuilder::create()
+                ->setWsdl('http://ws.cdyne.com/ip2geo/ip2geo.asmx?WSDL')
+                ->build();
+    }
+
+    private function createMockedClient()
+    {
+        $client = \Mockery::mock('\SoapClient');
+
+        $geoLocationResult = new \stdClass();
+            $geoLocationResult->City = "Mountain View";
+            $geoLocationResult->StateProvince = "CA";
+            $geoLocationResult->Country = "United States";
+            $geoLocationResult->Organization = "";
+            $geoLocationResult->Latitude = 37.386;
+            $geoLocationResult->Longitude = -122.0838;
+            $geoLocationResult->AreaCode = "650";
+            $geoLocationResult->TimeZone = "";
+            $geoLocationResult->HasDaylightSavings = false;
+            $geoLocationResult->Certainty = 90;
+            $geoLocationResult->RegionName = "";
+            $geoLocationResult->CountryCode = "US";
+
+        $clientResult = new \stdClass();
+        $clientResult->ResolveIPResult = $geoLocationResult;
+
+        $client->shouldReceive('__soapCall')->andReturn($clientResult);
+
+        return $client;
     }
 }

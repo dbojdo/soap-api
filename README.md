@@ -133,11 +133,7 @@ use Webit\SoapApi\Executor\SoapApiExecutorBuilder;
 use Webit\SoapApi\SoapClient\SoapClientSimpleFactory;
 
 $builder = SoapApiExecutorBuilder::create();
-$builder->setSoapClientFactory(
-    new SoapClientSimpleFactory(
-        'http://ws.cdyne.com/ip2geo/ip2geo.asmx?WSDL'
-    )
-);
+$builder->setWsdl('http://ws.cdyne.com/ip2geo/ip2geo.asmx?WSDL');
 
 $client = new \Webit\SoapApi\Features\Ip2Geo\Ip2GeoSimpleClient(
     $builder->build()
@@ -231,11 +227,7 @@ use Webit\SoapApi\Executor\SoapApiExecutorBuilder;
 use Webit\SoapApi\SoapClient\SoapClientSimpleFactory;
 
 $builder = SoapApiExecutorBuilder::create();
-$builder->setSoapClientFactory(
-    new SoapClientSimpleFactory(
-        'http://ws.cdyne.com/ip2geo/ip2geo.asmx?WSDL'
-    )
-);
+$builder->setWsdl('http://ws.cdyne.com/ip2geo/ip2geo.asmx?WSDL');
 
 $builder->setInputNormaliser(
     new \Webit\SoapApi\Input\FrontInputNormaliser(
@@ -339,11 +331,7 @@ use Webit\SoapApi\Executor\SoapApiExecutorBuilder;
 use Webit\SoapApi\SoapClient\SoapClientSimpleFactory;
 
 $builder = SoapApiExecutorBuilder::create();
-$builder->setSoapClientFactory(
-    new SoapClientSimpleFactory(
-        'http://ws.cdyne.com/ip2geo/ip2geo.asmx?WSDL'
-    )
-);
+$builder->setWsdl('http://ws.cdyne.com/ip2geo/ip2geo.asmx?WSDL');
 
 $builder->setInputNormaliser(
     new \Webit\SoapApi\Input\FrontInputNormaliser(
