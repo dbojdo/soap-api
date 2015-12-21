@@ -18,13 +18,20 @@ class ArrayHydrator implements Hydrator
     private $stcClassToArray;
 
     /**
+     * @var Hydrator
+     */
+    private $hydrator;
+
+    /**
      * ArrayHydrator constructor.
      * @param StdClassToArray $stcClassToArray
      */
     public function __construct(
-        StdClassToArray $stcClassToArray
+        StdClassToArray $stcClassToArray,
+        Hydrator $hydrator = null
     ) {
         $this->stcClassToArray = $stcClassToArray;
+        $this->hydrator = $hydrator ?: new VoidHydrator();
     }
 
     /**
@@ -36,7 +43,7 @@ class ArrayHydrator implements Hydrator
      */
     public function hydrateResult($result, $soapFunction)
     {
-        $hydrated = array();
+        $result = $this->hydrator->hydrateResult($result, $soapFunction);
         if (is_array($result)) {
             foreach ($result as $key => $value) {
                 $hydrated[$key] = $this->hydrateResult($value, $soapFunction);

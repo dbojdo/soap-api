@@ -10,6 +10,7 @@
 namespace Webit\SoapApi\Tests\Hydrator;
 
 use Webit\SoapApi\Hydrator\ArrayHydrator;
+use Webit\SoapApi\Hydrator\Hydrator;
 use Webit\SoapApi\Tests\AbstractTest;
 use Webit\SoapApi\Util\StdClassToArray;
 
@@ -20,10 +21,18 @@ class ArrayHydratorTest extends AbstractTest
      */
     private $hydrator;
 
+    /**
+     * @var Hydrator|\Mockery\MockInterface
+     */
+    private $innerHydrator;
+
     protected function setUp()
     {
+        $this->innerHydrator = $this->mockHydrator();
+
         $this->hydrator = new ArrayHydrator(
-            new StdClassToArray()
+            new StdClassToArray(),
+            $this->innerHydrator
         );
     }
 
@@ -35,6 +44,10 @@ class ArrayHydratorTest extends AbstractTest
      */
     public function shouldHydrateNonScalarResultToArray($input, $expectedResult)
     {
+        $this->innerHydrator->shouldReceive('hydrateResult')->andReturnUsing(function ($input) {
+            return $input;
+        });
+
         $this->assertEquals(
             $expectedResult,
             $this->hydrator->hydrateResult($input, 'any')
