@@ -44,7 +44,7 @@ class StdClassToArrayTest extends AbstractTest
         $input->a = "abc";
         $input->b = new \stdClass();
         $input->b->a = new \stdClass();
-        $input->b->b = array_fill(0, 10, "string");
+        $input->b->b = array_fill(0, 10, new \stdClass());
         $input->c = new \stdClass();
         $input->c->a = 12.5;
         $input->c->b = true;
@@ -53,7 +53,7 @@ class StdClassToArrayTest extends AbstractTest
             'a' => 'abc',
             'b' => array(
                 'a' => array(),
-                'b' => array_fill(0, 10, "string")
+                'b' => array_fill(0, 10, array())
             ),
             'c' => array(
                 'a' => 12.5,

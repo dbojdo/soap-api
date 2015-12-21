@@ -16,13 +16,27 @@ class StdClassToArray
      */
     public function toArray(\stdClass $stdClass)
     {
-        $array = (array) $stdClass;
-        foreach ($array as &$value) {
-            if ($value instanceof \stdClass) {
-                $value = $this->toArray($value);
-            }
+        return $this->castToArray($stdClass);
+    }
+
+    /**
+     * @param mixed $input
+     * @return array|mixed
+     */
+    private function castToArray($input)
+    {
+        if (is_scalar($input)) {
+            return $input;
         }
 
-        return $array;
+        if ($input instanceof \stdClass) {
+            $input = (array) $input;
+        }
+
+        foreach ($input as &$value) {
+            $value = $this->castToArray($value);
+        }
+
+        return $input;
     }
 }
