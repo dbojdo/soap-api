@@ -49,6 +49,10 @@ class StdClassToArrayTest extends AbstractTest
         $input->c->a = 12.5;
         $input->c->b = true;
 
+        $input->d = new \stdClass();
+        $input->d->a = 12.5;
+        $input->d->b = null;
+
         $expectedResult = array(
             'a' => 'abc',
             'b' => array(
@@ -58,6 +62,10 @@ class StdClassToArrayTest extends AbstractTest
             'c' => array(
                 'a' => 12.5,
                 'b' => true
+            ),
+            'd' => array(
+                'a' => 12.5,
+                'b' => null
             )
         );
 

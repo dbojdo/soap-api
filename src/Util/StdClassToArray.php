@@ -25,7 +25,7 @@ class StdClassToArray
      */
     private function castToArray($input)
     {
-        if (is_scalar($input)) {
+        if (is_scalar($input) || is_null($input)) {
             return $input;
         }
 
