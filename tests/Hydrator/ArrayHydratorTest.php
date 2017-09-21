@@ -74,7 +74,7 @@ class ArrayHydratorTest extends AbstractTest
             'c' => array(
                 'a' => 12.5,
                 'b' => true
-            )
+            ),
         );
 
         return array(
@@ -84,7 +84,8 @@ class ArrayHydratorTest extends AbstractTest
                 array($expectedResult, $expectedResult)
             ),
             array(true, true),
-            array("string", "string")
+            array("string", "string"),
+            array(array(), array())
         );
     }
 }

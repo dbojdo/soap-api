@@ -45,6 +45,7 @@ class ArrayHydrator implements Hydrator
     {
         $result = $this->hydrator->hydrateResult($result, $soapFunction);
         if (is_array($result)) {
+            $hydrated = array();
             foreach ($result as $key => $value) {
                 $hydrated[$key] = $this->hydrateResult($value, $soapFunction);
             }
