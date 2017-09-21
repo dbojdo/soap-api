@@ -43,7 +43,7 @@ class RawExecutorTest extends AbstractTest
 
         $this->soapClient->shouldReceive('__soapCall')->with(
             $function,
-            array($input)
+            $input
         )->andReturn($result);
 
         $this->assertEquals($result, $this->executor->executeSoapFunction($function, $input));

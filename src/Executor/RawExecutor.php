@@ -42,7 +42,7 @@ class RawExecutor implements SoapApiExecutor
     public function executeSoapFunction($soapFunction, $input = null)
     {
         try {
-            return $this->soapClient->__soapCall($soapFunction, array($input));
+            return $this->soapClient->__soapCall($soapFunction, $input);
         } catch (\Exception $e) {
             throw new ExecutorException($e->getMessage(), $e->getCode(), $e);
         }
