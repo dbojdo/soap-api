@@ -3,6 +3,7 @@
     "type" : "library",
     "description": "Web-IT SOAP API Tools",
     "keywords": ["soap", "api", "soap wrapper", "soap sdk"],
+    "license": "MIT",
     "authors": [
         {
             "name": "Daniel Bojdo",
