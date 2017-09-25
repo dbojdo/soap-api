@@ -69,6 +69,25 @@ class HydratorSerializerBasedTest extends AbstractTest
     /**
      * @test
      */
+    public function shouldByPassResultIfResultTypeNotResolved()
+    {
+        $resolvedType = null;
+
+        $func = 'func';
+        $result = array('result');
+
+        $this->resultTypeMap->shouldReceive('getResultType')->with($func)->andReturn($resolvedType)->once();
+        $this->serializer->shouldReceive('fromArray')->never();
+
+        $this->assertSame(
+            $result,
+            $this->hydrator->hydrateResult($result, $func)
+        );
+    }
+
+    /**
+     * @test
+     */
     public function shouldApplyArrayCollectionFix()
     {
         $resolvedType = 'ArrayCollection<type>';
@@ -107,10 +126,12 @@ class HydratorSerializerBasedTest extends AbstractTest
 
     /**
      * @test
-     * @expectedException \Webit\SoapApi\Hydrator\Exception\HydrationException
      */
-    public function shouldAcceptOnlyArrayResult()
+    public function shouldByPassNonScalarOrNonArray()
     {
-        $this->hydrator->hydrateResult('string', 'func');
+        $object = new \stdClass();
+        $this->assertSame($object,$this->hydrator->hydrateResult($object, 'func'));
+
+        $this->hydrator->hydrateResult($object, 'func');
     }
 }

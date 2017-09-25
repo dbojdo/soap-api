@@ -44,12 +44,16 @@ class HydratorSerializerBased implements Hydrator
      */
     public function hydrateResult($result, $soapFunction)
     {
-        if (! is_array($result)) {
-            throw new HydrationException('HydratorSerializerBased expects result to be an array.');
+        if (!(is_array($result) || is_scalar($result))) {
+            return $result;
+        }
+
+        $resultType = $this->resultTypeMap->getResultType($soapFunction);
+        if (! $resultType) {
+            return $result;
         }
 
         try {
-            $resultType = $this->resultTypeMap->getResultType($soapFunction);
             $hydrated = $this->serializer->fromArray(
                 $result,
                 $resultType

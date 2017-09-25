@@ -35,14 +35,10 @@ class ResultHydratingExecutor implements SoapApiExecutor
     }
 
     /**
-     * @param string $soapFunction
-     * @param mixed $input
-     * @return mixed
+     * @inheritdoc
      */
-    public function executeSoapFunction(
-        $soapFunction,
-        $input = null
-    ) {
+    public function executeSoapFunction($soapFunction, $input = null)
+    {
         $result = $this->soapApiExecutor->executeSoapFunction($soapFunction, $input);
 
         try {
