@@ -44,5 +44,4 @@ class ResultMapTest extends AbstractTest
 
         $this->assertEquals('string', $map->getResultType('fnc2'));
     }
-
 }

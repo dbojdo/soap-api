@@ -17,11 +17,6 @@ use Webit\SoapApi\SoapClient\SoapClientFactory;
 class RawExecutor implements SoapApiExecutor
 {
     /**
-     * @var string
-     */
-    private static $cacheKey = 'client';
-
-    /**
      * @var \SoapClient
      */
     private $soapClient;
@@ -35,9 +30,7 @@ class RawExecutor implements SoapApiExecutor
     }
 
     /**
-     * @param string $soapFunction
-     * @param mixed $input
-     * @return mixed
+     * @inheritdoc
      */
     public function executeSoapFunction($soapFunction, $input = null)
     {

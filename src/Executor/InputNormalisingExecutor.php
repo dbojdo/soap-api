@@ -35,14 +35,10 @@ class InputNormalisingExecutor implements SoapApiExecutor
     }
 
     /**
-     * @param string $soapFunction
-     * @param mixed $input
-     * @return mixed
+     * @inheritdoc
      */
-    public function executeSoapFunction(
-        $soapFunction,
-        $input = null
-    ) {
+    public function executeSoapFunction($soapFunction, $input = null)
+    {
         try {
             $normalisedInput = $this->inputNormaliser->normaliseInput($soapFunction, $input);
         } catch (\Exception $e) {
