@@ -10,15 +10,16 @@ namespace Webit\SoapApi\Tests\Hydrator;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Serializer;
+use Webit\SoapApi\Hydrator\Exception\HydrationException;
 use Webit\SoapApi\Hydrator\HydratorSerializerBased;
 use Webit\SoapApi\Hydrator\Serializer\ResultTypeMap;
-use Webit\SoapApi\Tests\AbstractTest;
+use Webit\SoapApi\Tests\AbstractTestCase;
 
 /**
  * Class HydratorSerializerTest
  * @package Webit\SoapApi\Tests\Hydrator
  */
-class HydratorSerializerBasedTest extends AbstractTest
+class HydratorSerializerBasedTest extends AbstractTestCase
 {
     /**
      * @var Serializer|\Mockery\MockInterface
@@ -35,7 +36,7 @@ class HydratorSerializerBasedTest extends AbstractTest
      */
     private $hydrator;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->serializer = $this->mockJmsSerializer();
         $this->resultTypeMap = $this->mockResultTypeMap();
@@ -109,7 +110,6 @@ class HydratorSerializerBasedTest extends AbstractTest
 
     /**
      * @test
-     * @expectedException \Webit\SoapApi\Hydrator\Exception\HydrationException
      */
     public function shouldWrapException()
     {
@@ -120,7 +120,7 @@ class HydratorSerializerBasedTest extends AbstractTest
 
         $this->resultTypeMap->shouldReceive('getResultType')->andReturn($resolvedType);
         $this->serializer->shouldReceive('fromArray')->andThrow('\Exception');
-
+        $this->expectException(HydrationException::class);
         $this->hydrator->hydrateResult($result, $func);
     }
 

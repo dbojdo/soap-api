@@ -9,16 +9,16 @@
 namespace Webit\SoapApi\Tests\Executor;
 
 use Webit\SoapApi\Executor\SoapApiExecutorBuilder;
-use Webit\SoapApi\Tests\AbstractTest;
+use Webit\SoapApi\Tests\AbstractTestCase;
 
-class ExecutorBuilderTest extends AbstractTest
+class SoapApiExecutorBuilderTest extends AbstractTestCase
 {
     /**
      * @var SoapApiExecutorBuilder
      */
     private $builder;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $wsdl = __DIR__.'/../Resources/test-wsdl.xml';
         $this->builder = SoapApiExecutorBuilder::create();
@@ -70,5 +70,6 @@ class ExecutorBuilderTest extends AbstractTest
     public function shouldAllowSetSoapClient()
     {
         $this->builder->setSoapClient($this->mockSoapClient());
+        $this->assertTrue(true);
     }
 }

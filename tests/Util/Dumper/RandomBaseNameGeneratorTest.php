@@ -2,17 +2,17 @@
 
 namespace Webit\SoapApi\Tests\Util\Dumper;
 
-use Webit\SoapApi\Tests\AbstractTest;
+use Webit\SoapApi\Tests\AbstractTestCase;
 use Webit\SoapApi\Util\Dumper\RandomBaseNameGenerator;
 
-class RandomBaseNameGeneratorTest extends AbstractTest
+class RandomBaseNameGeneratorTest extends AbstractTestCase
 {
     /**
      * @var RandomBaseNameGenerator
      */
     private $generator;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->generator = new RandomBaseNameGenerator();
     }

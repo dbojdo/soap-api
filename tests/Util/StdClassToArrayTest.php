@@ -9,17 +9,17 @@
 
 namespace Webit\SoapApi\Tests\Util;
 
-use Webit\SoapApi\Tests\AbstractTest;
+use Webit\SoapApi\Tests\AbstractTestCase;
 use Webit\SoapApi\Util\StdClassToArray;
 
-class StdClassToArrayTest extends AbstractTest
+class StdClassToArrayTest extends AbstractTestCase
 {
     /**
      * @var StdClassToArray
      */
     private $stdClassToArray;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->stdClassToArray = new StdClassToArray();
     }

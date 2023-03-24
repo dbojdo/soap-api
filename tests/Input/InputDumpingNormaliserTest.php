@@ -3,9 +3,9 @@
 namespace Webit\SoapApi\Tests\Input;
 
 use Webit\SoapApi\Input\InputDumpingNormaliser;
-use Webit\SoapApi\Tests\AbstractTest;
+use Webit\SoapApi\Tests\AbstractTestCase;
 
-class InputDumpingNormaliserTest extends AbstractTest
+class InputDumpingNormaliserTest extends AbstractTestCase
 {
     /**
      * @var \Webit\SoapApi\Input\InputNormaliser|\Mockery\MockInterface
@@ -22,7 +22,7 @@ class InputDumpingNormaliserTest extends AbstractTest
      */
     private $normaliser;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->innerNormaliser = $this->mockInputNormaliser();
         $this->dumper = \Mockery::mock('Webit\SoapApi\Util\Dumper\Dumper');

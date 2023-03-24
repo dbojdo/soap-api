@@ -9,13 +9,13 @@
 namespace Webit\SoapApi\Tests\Hydrator\Serializer;
 
 use Webit\SoapApi\Hydrator\Serializer\ResultTypeMap;
-use Webit\SoapApi\Tests\AbstractTest;
+use Webit\SoapApi\Tests\AbstractTestCase;
 
 /**
  * Class ResultMapTest
  * @package Webit\SoapApi\Tests\Hydrator\Result
  */
-class ResultMapTest extends AbstractTest
+class ResultTypeMapTest extends AbstractTestCase
 {
     /**
      * @test

@@ -10,9 +10,9 @@
 namespace Webit\SoapApi\Tests\Input;
 
 use Webit\SoapApi\Input\VoidInputNormaliser;
-use Webit\SoapApi\Tests\AbstractTest;
+use Webit\SoapApi\Tests\AbstractTestCase;
 
-class VoidInputNormaliserTest extends AbstractTest
+class VoidInputNormaliserTest extends AbstractTestCase
 {
     /**
      * @test

@@ -2,17 +2,17 @@
 
 namespace Webit\SoapApi\Tests\Util\Dumper;
 
-use Webit\SoapApi\Tests\AbstractTest;
+use Webit\SoapApi\Tests\AbstractTestCase;
 use Webit\SoapApi\Util\Dumper\VoidDumper;
 
-class VoidDumperTest extends AbstractTest
+class VoidDumperTest extends AbstractTestCase
 {
     /**
      * @var VoidDumper
      */
     private $dumper;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->dumper = new VoidDumper();
     }
@@ -23,5 +23,6 @@ class VoidDumperTest extends AbstractTest
     public function shouldDoNothing()
     {
         $this->dumper->dump($this->randomString(), array($this->randomString() => $this->randomString()));
+        $this->assertTrue(true);
     }
 }

@@ -9,10 +9,11 @@
 
 namespace Webit\SoapApi\Tests\Executor;
 
+use Webit\SoapApi\Executor\Exception\HydrationException;
 use Webit\SoapApi\Executor\ResultHydratingExecutor;
-use Webit\SoapApi\Tests\AbstractTest;
+use Webit\SoapApi\Tests\AbstractTestCase;
 
-class ResultHydratingExecutorTest extends AbstractTest
+class ResultHydratingExecutorTest extends AbstractTestCase
 {
     /**
      * @var \Mockery\MockInterface|\Webit\SoapApi\Hydrator\Hydrator
@@ -29,7 +30,7 @@ class ResultHydratingExecutorTest extends AbstractTest
      */
     private $executor;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->hydrator = $this->mockHydrator();
         $this->innerExecutor = $this->mockApiExecutor();
@@ -58,7 +59,6 @@ class ResultHydratingExecutorTest extends AbstractTest
 
     /**
      * @test
-     * @expectedException \Webit\SoapApi\Executor\Exception\HydrationException
      */
     public function shouldWrapHydrationException()
     {
@@ -68,7 +68,7 @@ class ResultHydratingExecutorTest extends AbstractTest
 
         $this->innerExecutor->shouldReceive('executeSoapFunction')->andReturn($rawResult);
         $this->hydrator->shouldReceive('hydrateResult')->andThrow('\Exception');
-
+        $this->expectException(HydrationException::class);
         $this->executor->executeSoapFunction($function, $input);
     }
 }

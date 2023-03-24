@@ -49,7 +49,6 @@ class GlobalWeatherContext implements Context, SnippetAcceptingContext
         $this->mockSoapClient = (bool) $mockSoapClient;
 
         $loader = require __DIR__ .'/../../vendor/autoload.php';
-        \Doctrine\Common\Annotations\AnnotationRegistry::registerLoader(array($loader, 'loadClass'));
     }
 
     /**
@@ -99,9 +98,9 @@ class GlobalWeatherContext implements Context, SnippetAcceptingContext
      */
     public function listOfTheCitiesShouldBeReturned()
     {
-        \PHPUnit_Framework_Assert::assertInternalType('array', $this->result);
+        \PHPUnit\Framework\Assert::assertEquals('array', gettype($this->result));
         foreach ($this->result as $city) {
-            \PHPUnit_Framework_Assert::assertInstanceOf('Webit\SoapApi\Features\GlobalWeather\City', $city);
+            \PHPUnit\Framework\Assert::assertInstanceOf('Webit\SoapApi\Features\GlobalWeather\City', $city);
         }
     }
 
@@ -119,7 +118,7 @@ class GlobalWeatherContext implements Context, SnippetAcceptingContext
      */
     public function currentWeatherShouldBeReturned()
     {
-        \PHPUnit_Framework_Assert::assertInstanceOf('\Webit\SoapApi\Features\GlobalWeather\Weather', $this->result);
+        \PHPUnit\Framework\Assert::assertInstanceOf('\Webit\SoapApi\Features\GlobalWeather\Weather', $this->result);
     }
 
     /**
@@ -142,11 +141,11 @@ class GlobalWeatherContext implements Context, SnippetAcceptingContext
     {
         $client = \Mockery::mock('\SoapClient');
 
-        $client->shouldReceive('__soapCall')->with('GetCitiesByCountry', \Mockery::any())->andReturn(
+        $client->shouldReceive('__soapCall')->with('GetCitiesByCountry', \Mockery::any(), [], [])->andReturn(
             $this->createCitiesResult()
         );
 
-        $client->shouldReceive('__soapCall')->with('GetWeather',  \Mockery::any())->andReturn(
+        $client->shouldReceive('__soapCall')->with('GetWeather',  \Mockery::any(), [], [])->andReturn(
             $this->createWeatherResult()
         );
 

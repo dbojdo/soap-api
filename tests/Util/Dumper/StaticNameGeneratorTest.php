@@ -2,10 +2,10 @@
 
 namespace Webit\SoapApi\Tests\Util\Dumper;
 
-use Webit\SoapApi\Tests\AbstractTest;
+use Webit\SoapApi\Tests\AbstractTestCase;
 use Webit\SoapApi\Util\Dumper\StaticNameGenerator;
 
-class StaticNameGeneratorTest extends AbstractTest
+class StaticNameGeneratorTest extends AbstractTestCase
 {
     /**
      * @test

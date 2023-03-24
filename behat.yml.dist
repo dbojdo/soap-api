@@ -2,13 +2,13 @@ default:
     suites:
         global_weather:
            paths:
-               -  %paths.base%/features/global-weather.feature
+               -  '%paths.base%/features/global-weather.feature'
            contexts:
                - GlobalWeatherContext:
                    mockSoapClient: true
         ip2geo:
            paths:
-               -  %paths.base%/features/ip2geo.feature
+               -  '%paths.base%/features/ip2geo.feature'
            contexts:
                - IP2GeoContext:
                    mockSoapClient: true

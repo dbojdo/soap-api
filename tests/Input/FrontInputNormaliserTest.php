@@ -9,9 +9,9 @@
 namespace Webit\SoapApi\Tests\Input;
 
 use Webit\SoapApi\Input\FrontInputNormaliser;
-use Webit\SoapApi\Tests\AbstractTest;
+use Webit\SoapApi\Tests\AbstractTestCase;
 
-class FrontInputNormaliserTest extends AbstractTest
+class FrontInputNormaliserTest extends AbstractTestCase
 {
     /**
      * @test

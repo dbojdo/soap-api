@@ -8,10 +8,11 @@
 
 namespace Webit\SoapApi\Tests\Executor;
 
+use Webit\SoapApi\Executor\Exception\NormalisationException;
 use Webit\SoapApi\Executor\InputNormalisingExecutor;
-use Webit\SoapApi\Tests\AbstractTest;
+use Webit\SoapApi\Tests\AbstractTestCase;
 
-class InputNormalisingExecutorTest extends AbstractTest
+class InputNormalisingExecutorTest extends AbstractTestCase
 {
     /**
      * @var \Mockery\MockInterface|\Webit\SoapApi\Executor\SoapApiExecutor
@@ -28,7 +29,7 @@ class InputNormalisingExecutorTest extends AbstractTest
      */
     private $executor;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->innerExecutor = $this->mockApiExecutor();
         $this->inputNormaliser = $this->mockInputNormaliser();
@@ -58,7 +59,6 @@ class InputNormalisingExecutorTest extends AbstractTest
 
     /**
      * @test
-     * @expectedException \Webit\SoapApi\Executor\Exception\NormalisationException
      */
     public function shouldWrapNormalisationException()
     {
@@ -66,7 +66,7 @@ class InputNormalisingExecutorTest extends AbstractTest
         $input = array('rawinput' => true);
 
         $this->inputNormaliser->shouldReceive('normaliseInput')->with($function, $input)->andThrow('\Exception')->once();
-
+        $this->expectException(NormalisationException::class);
         $this->executor->executeSoapFunction($function, $input);
     }
 }

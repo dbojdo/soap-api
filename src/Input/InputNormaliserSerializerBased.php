@@ -3,10 +3,10 @@
  * File: InputNormaliserSerializerBased.php
  * Created at: 2014-11-26 20:37
  */
- 
+
 namespace Webit\SoapApi\Input;
 
-use JMS\Serializer\Serializer;
+use JMS\Serializer\ArrayTransformerInterface;
 use Webit\SoapApi\Input\Exception\NormalisationException;
 use Webit\SoapApi\Input\Serializer\SerializationContextFactory;
 
@@ -17,7 +17,7 @@ use Webit\SoapApi\Input\Serializer\SerializationContextFactory;
 class InputNormaliserSerializerBased implements InputNormaliser
 {
     /**
-     * @var Serializer
+     * @var ArrayTransformerInterface
      */
     private $serializer;
 
@@ -28,11 +28,11 @@ class InputNormaliserSerializerBased implements InputNormaliser
 
     /**
      * InputNormalizerSerializerBased constructor.
-     * @param Serializer $serializer
+     * @param ArrayTransformerInterface $serializer
      * @param SerializationContextFactory $contextFactory
      */
     public function __construct(
-        Serializer $serializer,
+        ArrayTransformerInterface $serializer,
         SerializationContextFactory $contextFactory
     ) {
         $this->serializer = $serializer;
@@ -49,9 +49,8 @@ class InputNormaliserSerializerBased implements InputNormaliser
     {
         try {
             $context = $this->contextFactory->createContext($soapFunction);
-            $input = $this->serializer->toArray($arguments, $context);
 
-            return $input;
+            return $this->serializer->toArray($arguments, $context);
         } catch (\Exception $e) {
             throw new NormalisationException($e->getMessage(), $e->getCode(), $e);
         }

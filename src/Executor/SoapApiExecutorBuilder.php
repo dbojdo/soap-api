@@ -8,11 +8,9 @@
 
 namespace Webit\SoapApi\Executor;
 
-use Webit\SoapApi\Executor\Exception\MissingSoapClientFactoryException;
 use Webit\SoapApi\Hydrator\Hydrator;
 use Webit\SoapApi\Input\InputNormaliser;
 use Webit\SoapApi\SoapClient\SoapClientBuilder;
-use Webit\SoapApi\SoapClient\SoapClientFactory;
 
 class SoapApiExecutorBuilder
 {
@@ -35,6 +33,16 @@ class SoapApiExecutorBuilder
      * @var Hydrator
      */
     private $hydrator;
+
+    /**
+     * @var array
+     */
+    private $executionOptions = [];
+
+    /**
+     * @var array
+     */
+    private $executionHeaders = [];
 
     public function __construct()
     {
@@ -80,7 +88,7 @@ class SoapApiExecutorBuilder
     {
         $client = $this->soapClient ?: $this->soapClientBuilder->build();
 
-        $executor = new RawExecutor($client);
+        $executor = new RawExecutor($client, $this->executionOptions, $this->executionHeaders);
         if ($this->inputNormaliser) {
             $executor = new InputNormalisingExecutor($this->inputNormaliser, $executor);
         }
@@ -106,5 +114,15 @@ class SoapApiExecutorBuilder
     public function setSoapClientOptions(array $options)
     {
         $this->soapClientBuilder->setOptions($options);
+    }
+
+    public function setExecutionOptions(array $executionOptions)
+    {
+        $this->executionOptions = $executionOptions;
+    }
+
+    public function setExecutionHeaders(array $executionHeaders)
+    {
+        $this->executionHeaders = $executionHeaders;
     }
 }

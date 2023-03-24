@@ -10,9 +10,9 @@ namespace Webit\SoapApi\Tests\Input\Serializer;
 
 use JMS\Serializer\SerializationContext;
 use Webit\SoapApi\Input\Serializer\StaticSerializationContextFactory;
-use Webit\SoapApi\Tests\AbstractTest;
+use Webit\SoapApi\Tests\AbstractTestCase;
 
-class StaticSerializationContextFactoryTest extends AbstractTest
+class StaticSerializationContextFactoryTest extends AbstractTestCase
 {
     /**
      * @test

@@ -4,9 +4,9 @@ namespace Webit\SoapApi\Tests\Input;
 
 use Webit\SoapApi\Input\ArrayWrappingNormaliser;
 use Webit\SoapApi\Input\InputNormaliser;
-use Webit\SoapApi\Tests\AbstractTest;
+use Webit\SoapApi\Tests\AbstractTestCase;
 
-class ArrayWrappingNormaliserTest extends AbstractTest
+class ArrayWrappingNormaliserTest extends AbstractTestCase
 {
     /**
      * @var InputNormaliser|\Mockery\MockInterface
@@ -18,7 +18,7 @@ class ArrayWrappingNormaliserTest extends AbstractTest
      */
     private $normaliser;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->innerNormaliser = \Mockery::mock('Webit\SoapApi\Input\InputNormaliser');
         $this->normaliser = new ArrayWrappingNormaliser($this->innerNormaliser);

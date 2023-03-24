@@ -9,9 +9,9 @@
 namespace Webit\SoapApi\Tests\SoapClient;
 
 use Webit\SoapApi\SoapClient\SoapClientBuilder;
-use Webit\SoapApi\Tests\AbstractTest;
+use Webit\SoapApi\Tests\AbstractTestCase;
 
-class SoapClientBuilderTest extends AbstractTest
+class SoapClientBuilderTest extends AbstractTestCase
 {
     /**
      * @test

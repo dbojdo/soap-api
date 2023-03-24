@@ -3,9 +3,9 @@
 namespace Webit\SoapApi\Tests\Hydrator;
 
 use Webit\SoapApi\Hydrator\KeyExtractingHydrator;
-use Webit\SoapApi\Tests\AbstractTest;
+use Webit\SoapApi\Tests\AbstractTestCase;
 
-class KeyExtractingHydratorTest extends AbstractTest
+class KeyExtractingHydratorTest extends AbstractTestCase
 {
     /**
      * @param $soapResponse

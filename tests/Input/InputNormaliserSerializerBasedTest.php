@@ -3,20 +3,21 @@
  * File: InputNormaliserSerializedBasedTest.php
  * Created at: 2014-11-26 20:54
  */
- 
+
 namespace Webit\SoapApi\Tests\Input;
 
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\Serializer;
+use Webit\SoapApi\Input\Exception\NormalisationException;
 use Webit\SoapApi\Input\InputNormaliserSerializerBased;
 use Webit\SoapApi\Input\Serializer\SerializationContextFactory;
-use Webit\SoapApi\Tests\AbstractTest;
+use Webit\SoapApi\Tests\AbstractTestCase;
 
 /**
  * Class InputNormaliserSerializedBasedTest
  * @author Daniel Bojdo <daniel@bojdo.eu>
  */
-class InputNormaliserSerializedBasedTest extends AbstractTest
+class InputNormaliserSerializerBasedTest extends AbstractTestCase
 {
     /**
      * @var Serializer|\Mockery\MockInterface
@@ -33,7 +34,7 @@ class InputNormaliserSerializedBasedTest extends AbstractTest
      */
     private $normaliser;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->serialiser = $this->mockJmsSerializer();
         $this->contextFactory = $this->mockSerializationContextFactory();
@@ -48,11 +49,11 @@ class InputNormaliserSerializedBasedTest extends AbstractTest
      */
     public function shouldNormaliseInputWithSerialiser()
     {
-        $input = 'input';
+        $input = ['input'];
         $soapFunction = 'func';
         $context = SerializationContext::create();
 
-        $normalised = 'normalised';
+        $normalised = ['normalised'];
 
         $this->contextFactory->shouldReceive('createContext')->with($soapFunction)->andReturn($context)->once();
         $this->serialiser->shouldReceive('toArray')->with($input, $context)->andReturn($normalised)->once();
@@ -65,17 +66,16 @@ class InputNormaliserSerializedBasedTest extends AbstractTest
 
     /**
      * @test
-     * @expectedException \Webit\SoapApi\Input\Exception\NormalisationException
      */
     public function shouldWrapNormalisationException()
     {
-        $input = 'input';
+        $input = ['input'];
         $soapFunction = 'func';
         $context = SerializationContext::create();
 
         $this->contextFactory->shouldReceive('createContext')->with($soapFunction)->andReturn($context)->once();
         $this->serialiser->shouldReceive('toArray')->andThrow('\Exception')->once();
-
+        $this->expectException(NormalisationException::class);
         $this->normaliser->normaliseInput($soapFunction, $input);
     }
 }

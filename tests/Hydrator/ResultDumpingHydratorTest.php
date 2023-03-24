@@ -1,11 +1,12 @@
 <?php
 
-namespace Webit\SoapApi\Hydrator;
+namespace Webit\SoapApi\Tests\Hydrator;
 
-use Webit\SoapApi\Tests\AbstractTest;
+use Webit\SoapApi\Hydrator\ResultDumpingHydrator;
+use Webit\SoapApi\Tests\AbstractTestCase;
 use Webit\SoapApi\Util\Dumper\Dumper;
 
-class ResultDumpingHydratorTest extends AbstractTest
+class ResultDumpingHydratorTest extends AbstractTestCase
 {
     /**
      * @var Dumper|\Mockery\MockInterface
@@ -17,7 +18,7 @@ class ResultDumpingHydratorTest extends AbstractTest
      */
     private $hydrator;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->dumper = \Mockery::mock('Webit\SoapApi\Util\Dumper\Dumper');
         $this->hydrator = new ResultDumpingHydrator($this->dumper);

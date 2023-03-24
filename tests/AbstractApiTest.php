@@ -11,14 +11,14 @@ namespace Webit\SoapApi\Tests;
 use Webit\SoapApi\AbstractApi;
 use Webit\SoapApi\Executor\SoapApiExecutor;
 
-class AbstractApiTest extends AbstractTest
+class AbstractApiTest extends AbstractTestCase
 {
     /**
      * @var \Mockery\MockInterface|SoapApiExecutor
      */
     private $executor;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->executor = $this->mockApiExecutor();
     }
@@ -31,7 +31,6 @@ class AbstractApiTest extends AbstractTest
         $api = new TestApi($this->executor);
 
         $this->executor->shouldReceive('executeSoapFunction')->with('function', array('x'))->once();
-
         $api->test();
     }
 }

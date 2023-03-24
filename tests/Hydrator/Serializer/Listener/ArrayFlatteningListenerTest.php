@@ -5,9 +5,9 @@ namespace Webit\SoapApi\Tests\Hydrator\Serializer\Listener;
 use JMS\Serializer\DeserializationContext;
 use JMS\Serializer\EventDispatcher\PreDeserializeEvent;
 use Webit\SoapApi\Hydrator\Serializer\Listener\ArrayFlatteningListener;
-use Webit\SoapApi\Tests\AbstractTest;
+use Webit\SoapApi\Tests\AbstractTestCase;
 
-class ArrayFlatteningListenerTest extends AbstractTest
+class ArrayFlatteningListenerTest extends AbstractTestCase
 {
     /**
      * @param array $data

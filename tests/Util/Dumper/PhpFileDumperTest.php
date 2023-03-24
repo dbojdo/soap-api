@@ -2,11 +2,11 @@
 
 namespace Webit\SoapApi\Tests\Util\Dumper;
 
-use Webit\SoapApi\Tests\AbstractTest;
+use Webit\SoapApi\Tests\AbstractTestCase;
 use Webit\SoapApi\Util\Dumper\PhpFileDumper;
 use Webit\SoapApi\Util\Dumper\StaticNameGenerator;
 
-class PhpFileDumperTest extends AbstractTest
+class PhpFileDumperTest extends AbstractTestCase
 {
     /**
      * @test

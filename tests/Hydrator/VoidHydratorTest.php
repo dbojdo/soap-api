@@ -10,9 +10,9 @@
 namespace Webit\SoapApi\Tests\Hydrator;
 
 use Webit\SoapApi\Hydrator\VoidHydrator;
-use Webit\SoapApi\Tests\AbstractTest;
+use Webit\SoapApi\Tests\AbstractTestCase;
 
-class VoidHydratorTest extends AbstractTest
+class VoidHydratorTest extends AbstractTestCase
 {
     /**
      * @test

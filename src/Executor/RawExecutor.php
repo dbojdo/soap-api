@@ -6,9 +6,7 @@
 
 namespace Webit\SoapApi\Executor;
 
-use Doctrine\Common\Cache\ArrayCache;
 use Webit\SoapApi\Executor\Exception\ExecutorException;
-use Webit\SoapApi\SoapClient\SoapClientFactory;
 
 /**
  * Class RawExecutor
@@ -22,20 +20,39 @@ class RawExecutor implements SoapApiExecutor
     private $soapClient;
 
     /**
-     * @param \SoapClient $soapClient
+     * @var array
      */
-    public function __construct(\SoapClient $soapClient)
+    private $options;
+
+    /**
+     * @var array
+     */
+    private $headers;
+
+    /**
+     * @param \SoapClient $soapClient
+     * @param array $options
+     * @param array $headers
+     */
+    public function __construct(\SoapClient $soapClient, array $options = [], array $headers = [])
     {
         $this->soapClient = $soapClient;
+        $this->options = $options;
+        $this->headers = $headers;
     }
 
     /**
      * @inheritdoc
      */
-    public function executeSoapFunction($soapFunction, $input = null)
+    public function executeSoapFunction($soapFunction, $input = null, array $options = [], array $headers = [])
     {
         try {
-            return $this->soapClient->__soapCall($soapFunction, $input);
+            return $this->soapClient->__soapCall(
+                $soapFunction,
+                (array)$input,
+                array_merge($this->options, $options),
+                array_merge($this->headers, $headers)
+            );
         } catch (\Exception $e) {
             throw new ExecutorException($e->getMessage(), $e->getCode(), $e);
         }

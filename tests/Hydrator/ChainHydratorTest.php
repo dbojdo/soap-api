@@ -9,9 +9,9 @@
 namespace Webit\SoapApi\Tests\Hydrator;
 
 use Webit\SoapApi\Hydrator\ChainHydrator;
-use Webit\SoapApi\Tests\AbstractTest;
+use Webit\SoapApi\Tests\AbstractTestCase;
 
-class ChainHydratorTest extends AbstractTest
+class ChainHydratorTest extends AbstractTestCase
 {
     /**
      * @test

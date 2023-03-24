@@ -8,16 +8,11 @@
 
 namespace Webit\SoapApi\Tests;
 
-abstract class AbstractTest extends \PHPUnit_Framework_TestCase
-{
-    /**
-     * @return \Mockery\MockInterface|\Webit\SoapApi\SoapClient\SoapClientFactory
-     */
-    protected function mockSoapClientFactory()
-    {
-        return \Mockery::mock('Webit\SoapApi\SoapClient\SoapClientFactory');
-    }
+use JMS\Serializer\ArrayTransformerInterface;
+use PHPUnit\Framework\TestCase;
 
+abstract class AbstractTestCase extends TestCase
+{
     /**
      * @return \Mockery\MockInterface|\SoapClient
      */
@@ -51,11 +46,11 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return \Mockery\MockInterface|\JMS\Serializer\Serializer
+     * @return \Mockery\MockInterface|ArrayTransformerInterface
      */
     protected function mockJmsSerializer()
     {
-       return \Mockery::mock('JMS\Serializer\Serializer');
+       return \Mockery::mock(ArrayTransformerInterface::class);
     }
 
     /**
@@ -141,5 +136,10 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
         }
 
         return $stdClass;
+    }
+
+    protected function tearDown(): void
+    {
+        \Mockery::close();
     }
 }

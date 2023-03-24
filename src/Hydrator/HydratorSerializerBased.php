@@ -9,7 +9,7 @@
 namespace Webit\SoapApi\Hydrator;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use JMS\Serializer\Serializer;
+use JMS\Serializer\ArrayTransformerInterface;
 use Webit\SoapApi\Hydrator\Exception\HydrationException;
 use Webit\SoapApi\Hydrator\Serializer\ResultTypeMap;
 
@@ -20,7 +20,7 @@ use Webit\SoapApi\Hydrator\Serializer\ResultTypeMap;
 class HydratorSerializerBased implements Hydrator
 {
     /**
-     * @var Serializer
+     * @var ArrayTransformerInterface
      */
     private $serializer;
 
@@ -30,7 +30,7 @@ class HydratorSerializerBased implements Hydrator
     private $resultTypeMap;
 
     public function __construct(
-        Serializer $serializer,
+        ArrayTransformerInterface $serializer,
         ResultTypeMap $resultTypeMap
     ) {
         $this->serializer = $serializer;
@@ -61,7 +61,7 @@ class HydratorSerializerBased implements Hydrator
         } catch (\Exception $e) {
             throw new HydrationException(
                 sprintf('Error during result hydration to type "%s"', $resultType),
-                null,
+                0,
                 $e
             );
         }

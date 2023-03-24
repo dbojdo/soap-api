@@ -11,10 +11,10 @@ namespace Webit\SoapApi\Tests\Hydrator;
 
 use Webit\SoapApi\Hydrator\ArrayHydrator;
 use Webit\SoapApi\Hydrator\Hydrator;
-use Webit\SoapApi\Tests\AbstractTest;
+use Webit\SoapApi\Tests\AbstractTestCase;
 use Webit\SoapApi\Util\StdClassToArray;
 
-class ArrayHydratorTest extends AbstractTest
+class ArrayHydratorTest extends AbstractTestCase
 {
     /**
      * @var ArrayHydrator
@@ -26,7 +26,7 @@ class ArrayHydratorTest extends AbstractTest
      */
     private $innerHydrator;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->innerHydrator = $this->mockHydrator();
 

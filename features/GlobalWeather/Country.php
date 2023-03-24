@@ -8,9 +8,6 @@
 
 namespace Webit\SoapApi\Features\GlobalWeather;
 
-use JMS\Serializer\GenericSerializationVisitor;
-use JMS\Serializer\Annotation as JMS;
-
 class Country
 {
     /**
@@ -33,15 +30,5 @@ class Country
     public function __toString()
     {
         return (string) $this->name;
-    }
-
-    /**
-     * @JMS\HandlerCallback("json", direction = "serialization")
-     * @param GenericSerializationVisitor $visitor
-     * @return mixed|string
-     */
-    public function serializationHandler(GenericSerializationVisitor $visitor, $type, $context)
-    {
-        return $visitor->visitString($this, array('string'), $context);
     }
 }

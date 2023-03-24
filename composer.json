@@ -11,15 +11,16 @@
         }
     ],
     "require": {
-        "php": ">=5.4",
-        "doctrine/collections": "~1.2",
-        "doctrine/cache": "~1.2"
+        "php": ">=7.4",
+        "ext-soap": "*",
+        "doctrine/collections": "^1.2",
+        "doctrine/cache": "^1.2"
     },
     "require-dev": {
-        "jms/serializer": "~1.0",
-        "phpunit/phpunit": "~4.2",
-        "mockery/mockery": "*",
-        "behat/behat": "~3.0"
+        "jms/serializer": "^2.0|^3.0",
+        "phpunit/phpunit": "^9.6.5",
+        "mockery/mockery": "^1.5.1",
+        "behat/behat": "^3.0"
     },
     "suggest": {
         "jms/serializer": "To support normalization / hydration based on JMS Serializer. Minimum version: 1.0"
@@ -40,7 +41,8 @@
     "extra": {
         "branch-alias": {
             "dev-1.x": "1.x-dev",
-            "dev-master": "2.x-dev"
+            "dev-2.x": "2.x-dev",
+            "dev-master": "3.x-dev"
         }
     }
 }

@@ -48,7 +48,7 @@ class IP2GeoContext implements Context, SnippetAcceptingContext
      */
     public function theGeoLocationShouldBeReturned()
     {
-        PHPUnit_Framework_TestCase::assertNotNull($this->result);
+        \PHPUnit\Framework\TestCase::assertNotNull($this->result);
     }
 
     /**
