@@ -45,6 +45,6 @@ class InputNormalisingExecutor implements SoapApiExecutor
             throw new NormalisationException($e->getMessage(), $e->getCode(), $e);
         }
 
-        return $this->soapApiExecutor->executeSoapFunction($soapFunction, $normalisedInput);
+        return $this->soapApiExecutor->executeSoapFunction($soapFunction, $normalisedInput, $options, $headers);
     }
 }

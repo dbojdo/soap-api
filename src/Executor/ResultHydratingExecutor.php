@@ -39,7 +39,7 @@ class ResultHydratingExecutor implements SoapApiExecutor
      */
     public function executeSoapFunction($soapFunction, $input = null, array $options = [], array $headers = [])
     {
-        $result = $this->soapApiExecutor->executeSoapFunction($soapFunction, $input);
+        $result = $this->soapApiExecutor->executeSoapFunction($soapFunction, $input, $options, $headers);
 
         try {
             return $this->hydrator->hydrateResult($result, $soapFunction);
