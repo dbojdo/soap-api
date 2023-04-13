@@ -3,7 +3,7 @@
  * File: SoapApiExecutorInterface.php
  * Created at: 2014-11-25 18:28
  */
- 
+
 namespace Webit\SoapApi\Executor;
 
 /**
@@ -18,5 +18,5 @@ interface SoapApiExecutor
      * @throws \Webit\SoapApi\Exception\SoapApiException
      * @return mixed
      */
-    public function executeSoapFunction($soapFunction, $input = null);
+    public function executeSoapFunction($soapFunction, $input = null, array $options = [], array $headers = []);
 }
